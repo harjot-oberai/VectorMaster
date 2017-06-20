@@ -50,7 +50,7 @@ public class PathModel {
 
         pathPaint = new Paint();
         pathPaint.setAntiAlias(true);
-        pathPaint.setStrokeWidth(strokeWidth * DefaultValues.STROKE_MULTIPLIER);
+        pathPaint.setStrokeWidth(strokeWidth);
         pathPaint.setColor((fillColor == Color.TRANSPARENT) ? strokeColor : fillColor);
         pathPaint.setAlpha((fillColor == Color.TRANSPARENT) ? Utils.getAlphaFromFloat(strokeAlpha) : Utils.getAlphaFromFloat(fillAlpha));
 

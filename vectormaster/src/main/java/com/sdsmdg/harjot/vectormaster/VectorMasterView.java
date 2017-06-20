@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
@@ -184,6 +181,20 @@ public class VectorMasterView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (w != 0 && h != 0) {
+
+            width = w;
+            height = h;
+
+            buildScaleMatrix();
+            scaleAllPaths();
+            vectorModel.updateAllPathPaintStroke(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
@@ -196,13 +207,6 @@ public class VectorMasterView extends View {
 
         setAlpha(vectorModel.getAlpha());
 
-        updateClipBounds(canvas);
-
-        if (scaleMatrix == null || width != canvas.getWidth() || height != canvas.getHeight()) {
-            buildScaleMatrix();
-            scaleAllPaths();
-        }
-
         for (PathModel pathModel : vectorModel.getPathModels()) {
             canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
         }
@@ -210,27 +214,22 @@ public class VectorMasterView extends View {
     }
 
     void buildScaleMatrix() {
-        scaleMatrix = getMatrix();
 
-        RectF viewRect = new RectF(0, 0, width, height);
+        scaleMatrix = new Matrix();
 
-        RectF rectF = new RectF();
-        vectorModel.getFullpath().computeBounds(rectF, true);
+        scaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
 
-        scaleMatrix.setRectToRect(rectF, viewRect, Matrix.ScaleToFit.CENTER);
+        float widthRatio = width / vectorModel.getViewportWidth();
+        float heightRatio = height / vectorModel.getViewportHeight();
+        float ratio = Math.min(widthRatio, heightRatio);
+
+        scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
     }
 
     void scaleAllPaths() {
         for (PathModel pathModel : vectorModel.getPathModels()) {
             pathModel.getPath().transform(scaleMatrix);
         }
-    }
-
-    void updateClipBounds(Canvas canvas) {
-        Rect newRect = canvas.getClipBounds();
-        newRect.inset(-1 * vectorModel.getMaxStrokeWidth(), -1 * vectorModel.getMaxStrokeWidth());
-
-        canvas.clipRect(newRect, Region.Op.REPLACE);
     }
 
 }

@@ -8,8 +8,27 @@
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
     <com.sdsmdg.harjot.vectormaster.VectorMasterView
+        android:id="@+id/vector_master"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/center_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
         app:vector_src="@drawable/ic_cloud_drizzle" />
+
+    <View
+        android:id="@+id/center_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:id="@+id/vector_compat"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/center_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        app:srcCompat="@drawable/ic_cloud_drizzle" />
+
 </RelativeLayout>

@@ -35,6 +35,7 @@ public class DefaultValues {
     public final static Path.FillType PATH_FILL_TYPE = Path.FillType.WINDING;
 
     public final static float STROKE_MULTIPLIER = 10;
+    public final static float STROKE_SCALE_RATIO_MULTIPLIER = 0.1f;
 
     public final static float VECTOR_VIEWPORT_WIDTH = 0.0f;
     public final static float VECTOR_VIEWPORT_HEIGHT = 0.0f;

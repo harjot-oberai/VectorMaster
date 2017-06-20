@@ -43,6 +43,13 @@ public class VectorModel {
         return (int) (maxStroke * DefaultValues.STROKE_MULTIPLIER);
     }
 
+
+    public void updateAllPathPaintStroke(float ratio) {
+        for (PathModel pathModel : pathModels) {
+            pathModel.getPathPaint().setStrokeWidth(pathModel.getPathPaint().getStrokeWidth() * ratio);
+        }
+    }
+
     public ArrayList<PathModel> getPathModels() {
         return pathModels;
     }
