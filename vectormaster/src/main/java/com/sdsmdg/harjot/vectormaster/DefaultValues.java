@@ -34,4 +34,6 @@ public class DefaultValues {
     // WINDING fill type is equivalent to NON_ZERO
     public final static Path.FillType PATH_FILL_TYPE = Path.FillType.WINDING;
 
+    public final static float STROKE_MULTIPLIER = 10;
+
 }

@@ -49,9 +49,12 @@ public class PathModel {
             path.setFillType(fillType);
 
         pathPaint = new Paint();
-        pathPaint.setStrokeWidth(strokeWidth);
+        pathPaint.setStrokeWidth(strokeWidth * DefaultValues.STROKE_MULTIPLIER);
         pathPaint.setColor((fillColor == Color.TRANSPARENT) ? strokeColor : fillColor);
         pathPaint.setAlpha((fillColor == Color.TRANSPARENT) ? Utils.getAlphaFromFloat(strokeAlpha) : Utils.getAlphaFromFloat(fillAlpha));
+
+        pathPaint.setStyle((fillColor == Color.TRANSPARENT) ? Paint.Style.STROKE : Paint.Style.FILL);
+
         pathPaint.setStrokeCap(strokeLineCap);
         pathPaint.setStrokeJoin(strokeLineJoin);
         pathPaint.setStrokeMiter(strokeMiterLimit);

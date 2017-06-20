@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +31,10 @@ public class VectorMasterView extends View {
     XmlPullParser xpp;
 
     String TAG = "VECTOR_MASTER";
+
+    Matrix scaleMatrix;
+
+    int width = 0, height = 0;
 
     public VectorMasterView(Context context) {
         super(context);
@@ -67,6 +73,12 @@ public class VectorMasterView extends View {
     }
 
     void buildVectorModel() {
+
+        if (resID == -1) {
+            vectorModel = null;
+            return;
+        }
+
         xpp = resources.getXml(resID);
 
         int tempPosition;
@@ -81,42 +93,58 @@ public class VectorMasterView extends View {
                         if (name.equals("path")) {
                             pathModel = new PathModel();
 
+                            Log.d(TAG, "******************************");
+
                             tempPosition = getAttrPosition(xpp, "name");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
 
                             tempPosition = getAttrPosition(xpp, "fillAlpha");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setFillAlpha((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_FILL_ALPHA);
 
                             tempPosition = getAttrPosition(xpp, "fillColor");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setFillColor((tempPosition != -1) ? Utils.getColorFromString(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_FILL_COLOR);
 
                             tempPosition = getAttrPosition(xpp, "fillType");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setFillType((tempPosition != -1) ? Utils.getFillTypeFromString(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_FILL_TYPE);
 
                             tempPosition = getAttrPosition(xpp, "pathData");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
 
                             tempPosition = getAttrPosition(xpp, "strokeAlpha");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeAlpha((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_ALPHA);
 
                             tempPosition = getAttrPosition(xpp, "strokeColor");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeColor((tempPosition != -1) ? Utils.getColorFromString(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_COLOR);
 
                             tempPosition = getAttrPosition(xpp, "strokeLineCap");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeLineCap((tempPosition != -1) ? Utils.getLineCapFromString(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_LINE_CAP);
 
                             tempPosition = getAttrPosition(xpp, "strokeLineJoin");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeLineJoin((tempPosition != -1) ? Utils.getLineJoinFromString(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_LINE_JOIN);
 
                             tempPosition = getAttrPosition(xpp, "strokeMiterLimit");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeMiterLimit((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_MITER_LIMIT);
 
                             tempPosition = getAttrPosition(xpp, "strokeWidth");
+                            Log.d(TAG, (tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : "null");
                             pathModel.setStrokeWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_WIDTH);
+
+                            Log.d(TAG, "******************************");
 
                             pathModel.buildPathAndPaint();
 
                             vectorModel.addPathModel(pathModel);
+                            vectorModel.getFullpath().addPath(pathModel.getPath());
                         }
                         break;
 
@@ -132,12 +160,12 @@ public class VectorMasterView extends View {
     }
 
     int getAttrPosition(XmlPullParser xpp, String attrName) {
+        Log.e(TAG, attrName);
         for (int i = 0; i < xpp.getAttributeCount(); i++) {
             if (xpp.getAttributeName(i).equals(attrName)) {
                 return i;
             }
         }
-        Log.e(TAG, attrName);
         return -1;
     }
 
@@ -150,18 +178,45 @@ public class VectorMasterView extends View {
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        //TODO : scale all the paths
-
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        // TODO : draw paths after scaling
+        if (vectorModel == null) {
+            return;
+        }
 
+        if (scaleMatrix == null || width != canvas.getWidth() || height != canvas.getHeight()) {
+            buildScaleMatrix();
+            scaleAllPaths();
+        }
+
+        for (PathModel pathModel : vectorModel.getPathModels()) {
+            canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+        }
+
+//        canvas.drawPath(vectorModel.getPathModels().get(1).getPath(), vectorModel.getPathModels().get(1).getPathPaint());
+
+//        vectorModel.getFullpath().transform(scaleMatrix);
+//        canvas.drawPath(vectorModel.getFullpath(), vectorModel.getPathModels().get(0).getPathPaint());
+
+    }
+
+    void buildScaleMatrix() {
+        scaleMatrix = getMatrix();
+
+        scaleMatrix.setScale(20, 20);
+
+//        RectF viewRect = new RectF(0, 0, width, height);
+//
+//        RectF rectF = new RectF();
+//        vectorModel.getFullpath().computeBounds(rectF, true);
+//
+//        scaleMatrix.setRectToRect(rectF, viewRect, Matrix.ScaleToFit.CENTER);
+    }
+
+    void scaleAllPaths() {
+        for (PathModel pathModel : vectorModel.getPathModels()) {
+            pathModel.getPath().transform(scaleMatrix);
+        }
     }
 }

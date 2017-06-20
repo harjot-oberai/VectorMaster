@@ -26,12 +26,31 @@ public class VectorModel {
 
     private ArrayList<PathModel> pathModels;
 
+    private Path fullpath;
+
     public VectorModel() {
         pathModels = new ArrayList<>();
+        fullpath = new Path();
+    }
+
+    public ArrayList<PathModel> getPathModels() {
+        return pathModels;
+    }
+
+    public void setPathModels(ArrayList<PathModel> pathModels) {
+        this.pathModels = pathModels;
     }
 
     public void addPathModel(PathModel pathModel) {
         pathModels.add(pathModel);
+    }
+
+    public Path getFullpath() {
+        return fullpath;
+    }
+
+    public void setFullpath(Path fullpath) {
+        this.fullpath = fullpath;
     }
 
     public String getName() {
