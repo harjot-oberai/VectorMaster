@@ -1,6 +1,9 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Path;
+import android.graphics.PointF;
 
 import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
@@ -8,19 +11,98 @@ import java.util.ArrayList;
 
 public class VectorModel {
 
-    String name;
+    private String name;
 
-    int width, height;
+    private int width, height;
 
-    float alpha = 1.0f;
+    private float alpha = 1.0f;
 
-    boolean autoMirrored = false;
+    private boolean autoMirrored = false;
 
-    int tint = Color.TRANSPARENT;
-    TintMode tintMode = TintMode.SCR_IN;
+    private int tint = Color.TRANSPARENT;
+    private TintMode tintMode = TintMode.SCR_IN;
 
-    float viewportWidth, viewportHeight;
+    private float viewportWidth, viewportHeight;
 
-    ArrayList<PathModel> pathModels;
+    private ArrayList<PathModel> pathModels;
 
+    public VectorModel() {
+        pathModels = new ArrayList<>();
+    }
+
+    public void addPathModel(PathModel pathModel) {
+        pathModels.add(pathModel);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public float getAlpha() {
+        return alpha;
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = alpha;
+    }
+
+    public boolean isAutoMirrored() {
+        return autoMirrored;
+    }
+
+    public void setAutoMirrored(boolean autoMirrored) {
+        this.autoMirrored = autoMirrored;
+    }
+
+    public int getTint() {
+        return tint;
+    }
+
+    public void setTint(int tint) {
+        this.tint = tint;
+    }
+
+    public TintMode getTintMode() {
+        return tintMode;
+    }
+
+    public void setTintMode(TintMode tintMode) {
+        this.tintMode = tintMode;
+    }
+
+    public float getViewportWidth() {
+        return viewportWidth;
+    }
+
+    public void setViewportWidth(float viewportWidth) {
+        this.viewportWidth = viewportWidth;
+    }
+
+    public float getViewportHeight() {
+        return viewportHeight;
+    }
+
+    public void setViewportHeight(float viewportHeight) {
+        this.viewportHeight = viewportHeight;
+    }
 }
