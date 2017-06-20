@@ -14,7 +14,7 @@
         android:layout_above="@+id/center_view"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        app:vector_src="@drawable/ic_cloud_drizzle" />
+        app:vector_src="@drawable/ic_cloud_lightning" />
 
     <View
         android:id="@+id/center_view"

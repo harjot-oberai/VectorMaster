@@ -5,10 +5,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Region;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
@@ -127,7 +125,7 @@ public class VectorMasterView extends View {
                             tempPosition = getAttrPosition(xpp, "strokeWidth");
                             pathModel.setStrokeWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_WIDTH);
 
-                            pathModel.buildPathAndPaint();
+                            pathModel.buildPath();
 
                             vectorModel.addPathModel(pathModel);
                             vectorModel.getFullpath().addPath(pathModel.getPath());
@@ -230,6 +228,19 @@ public class VectorMasterView extends View {
         for (PathModel pathModel : vectorModel.getPathModels()) {
             pathModel.getPath().transform(scaleMatrix);
         }
+    }
+
+    public PathModel getPathModelByName(String name) {
+        for (PathModel pathModel : vectorModel.getPathModels()) {
+            if (pathModel.getName().equals(name)) {
+                return pathModel;
+            }
+        }
+        return null;
+    }
+
+    public void update() {
+        invalidate();
     }
 
 }

@@ -41,14 +41,18 @@ public class PathModel {
         strokeLineJoin = DefaultValues.PATH_STROKE_LINE_JOIN;
         strokeMiterLimit = DefaultValues.PATH_STROKE_MITER_LIMIT;
         strokeWidth = DefaultValues.PATH_STROKE_WIDTH;
+
+        pathPaint = new Paint();
+        updatePaint();
     }
 
-    public void buildPathAndPaint() {
+    public void buildPath() {
         path = PathParser.createPathFromPathData(pathData);
         if (path != null)
             path.setFillType(fillType);
+    }
 
-        pathPaint = new Paint();
+    public void updatePaint() {
         pathPaint.setAntiAlias(true);
         pathPaint.setStrokeWidth(strokeWidth);
         pathPaint.setColor((fillColor == Color.TRANSPARENT) ? strokeColor : fillColor);
@@ -91,6 +95,7 @@ public class PathModel {
 
     public void setFillAlpha(float fillAlpha) {
         this.fillAlpha = fillAlpha;
+        updatePaint();
     }
 
     public int getFillColor() {
@@ -99,6 +104,7 @@ public class PathModel {
 
     public void setFillColor(int fillColor) {
         this.fillColor = fillColor;
+        updatePaint();
     }
 
     public Path.FillType getFillType() {
@@ -107,6 +113,8 @@ public class PathModel {
 
     public void setFillType(Path.FillType fillType) {
         this.fillType = fillType;
+        if (path != null)
+            path.setFillType(fillType);
     }
 
     public String getPathData() {
@@ -123,6 +131,7 @@ public class PathModel {
 
     public void setStrokeAlpha(float strokeAlpha) {
         this.strokeAlpha = strokeAlpha;
+        updatePaint();
     }
 
     public int getStrokeColor() {
@@ -131,6 +140,7 @@ public class PathModel {
 
     public void setStrokeColor(int strokeColor) {
         this.strokeColor = strokeColor;
+        updatePaint();
     }
 
     public Paint.Cap getStrokeLineCap() {
@@ -139,6 +149,7 @@ public class PathModel {
 
     public void setStrokeLineCap(Paint.Cap strokeLineCap) {
         this.strokeLineCap = strokeLineCap;
+        updatePaint();
     }
 
     public Paint.Join getStrokeLineJoin() {
@@ -147,6 +158,7 @@ public class PathModel {
 
     public void setStrokeLineJoin(Paint.Join strokeLineJoin) {
         this.strokeLineJoin = strokeLineJoin;
+        updatePaint();
     }
 
     public float getStrokeMiterLimit() {
@@ -155,6 +167,7 @@ public class PathModel {
 
     public void setStrokeMiterLimit(float strokeMiterLimit) {
         this.strokeMiterLimit = strokeMiterLimit;
+        updatePaint();
     }
 
     public float getStrokeWidth() {
@@ -163,5 +176,6 @@ public class PathModel {
 
     public void setStrokeWidth(float strokeWidth) {
         this.strokeWidth = strokeWidth;
+        updatePaint();
     }
 }
