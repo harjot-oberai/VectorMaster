@@ -1,5 +1,13 @@
 package com.sdsmdg.harjot.vectormaster.utilities;
 
+/*
+ * This class has been extracted from the android source code. In the latest versions, most of the code has been moved for
+ * native processing. This is pure java implementation that was used before the native integration. This works very good
+ * in terms of performance.
+ * The link to the file :
+ * https://android.googlesource.com/platform/frameworks/base/+/17e64ffd852f8fe23b8e2e2ff1b62ee742af17a6/core/java/android/util/PathParser.java
+ */
+
 import android.graphics.Path;
 import android.util.Log;
 
