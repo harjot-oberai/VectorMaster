@@ -31,6 +31,8 @@ public class DefaultValues {
 
     public final static float PATH_STROKE_MITER_LIMIT = 4.0f;
 
+    public final static float PATH_STROKE_RATIO = 1.0f;
+
     // WINDING fill type is equivalent to NON_ZERO
     public final static Path.FillType PATH_FILL_TYPE = Path.FillType.WINDING;
 

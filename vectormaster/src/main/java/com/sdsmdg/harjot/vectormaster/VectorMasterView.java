@@ -182,7 +182,6 @@ public class VectorMasterView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w != 0 && h != 0) {
-
             width = w;
             height = h;
 
@@ -206,7 +205,14 @@ public class VectorMasterView extends View {
         setAlpha(vectorModel.getAlpha());
 
         for (PathModel pathModel : vectorModel.getPathModels()) {
-            canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            if (pathModel.isFillAndStroke()) {
+                pathModel.makeFillPaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                pathModel.makeStrokePaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            } else {
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            }
         }
 
     }

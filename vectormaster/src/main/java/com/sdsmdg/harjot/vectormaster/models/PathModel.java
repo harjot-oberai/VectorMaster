@@ -26,6 +26,10 @@ public class PathModel {
     private float strokeMiterLimit;
     private float strokeWidth;
 
+    private float strokeRatio;
+
+    private boolean isFillAndStroke = false;
+
     // Support for trim-paths is not available
 
     private Path path;
@@ -41,8 +45,10 @@ public class PathModel {
         strokeLineJoin = DefaultValues.PATH_STROKE_LINE_JOIN;
         strokeMiterLimit = DefaultValues.PATH_STROKE_MITER_LIMIT;
         strokeWidth = DefaultValues.PATH_STROKE_WIDTH;
+        strokeRatio = DefaultValues.PATH_STROKE_RATIO;
 
         pathPaint = new Paint();
+        pathPaint.setAntiAlias(true);
         updatePaint();
     }
 
@@ -53,16 +59,37 @@ public class PathModel {
     }
 
     public void updatePaint() {
-        pathPaint.setAntiAlias(true);
-        pathPaint.setStrokeWidth(strokeWidth);
-        pathPaint.setColor((fillColor == Color.TRANSPARENT) ? strokeColor : fillColor);
-        pathPaint.setAlpha((fillColor == Color.TRANSPARENT) ? Utils.getAlphaFromFloat(strokeAlpha) : Utils.getAlphaFromFloat(fillAlpha));
+        pathPaint.setStrokeWidth(strokeWidth * strokeRatio);
 
-        pathPaint.setStyle((fillColor == Color.TRANSPARENT) ? Paint.Style.STROKE : Paint.Style.FILL);
+        if (fillColor != Color.TRANSPARENT && strokeColor != Color.TRANSPARENT) {
+            isFillAndStroke = true;
+        } else if (fillColor != Color.TRANSPARENT) {
+            pathPaint.setColor(fillColor);
+            pathPaint.setAlpha(Utils.getAlphaFromFloat(fillAlpha));
+            pathPaint.setStyle(Paint.Style.FILL);
+            isFillAndStroke = false;
+        } else if (strokeColor != Color.TRANSPARENT) {
+            pathPaint.setColor(strokeColor);
+            pathPaint.setAlpha(Utils.getAlphaFromFloat(strokeAlpha));
+            pathPaint.setStyle(Paint.Style.STROKE);
+            isFillAndStroke = false;
+        }
 
         pathPaint.setStrokeCap(strokeLineCap);
         pathPaint.setStrokeJoin(strokeLineJoin);
         pathPaint.setStrokeMiter(strokeMiterLimit);
+    }
+
+    public void makeStrokePaint() {
+        pathPaint.setColor(strokeColor);
+        pathPaint.setAlpha(Utils.getAlphaFromFloat(strokeAlpha));
+        pathPaint.setStyle(Paint.Style.STROKE);
+    }
+
+    public void makeFillPaint() {
+        pathPaint.setColor(fillColor);
+        pathPaint.setAlpha(Utils.getAlphaFromFloat(fillAlpha));
+        pathPaint.setStyle(Paint.Style.FILL);
     }
 
     public Path getPath() {
@@ -177,5 +204,18 @@ public class PathModel {
     public void setStrokeWidth(float strokeWidth) {
         this.strokeWidth = strokeWidth;
         updatePaint();
+    }
+
+    public float getStrokeRatio() {
+        return strokeRatio;
+    }
+
+    public void setStrokeRatio(float strokeRatio) {
+        this.strokeRatio = strokeRatio;
+        updatePaint();
+    }
+
+    public boolean isFillAndStroke() {
+        return isFillAndStroke;
     }
 }

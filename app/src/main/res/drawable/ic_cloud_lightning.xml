@@ -15,7 +15,7 @@
         android:name="lightning"
         android:fillColor="#00000000"
         android:pathData="M13,11l-4,6l6,0l-4,6"
-        android:strokeColor="#000"
+        android:strokeColor="#FFD700"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"
         android:strokeWidth="2" />

@@ -36,7 +36,7 @@ public class VectorModel {
 
     public void updateAllPathPaintStroke(float ratio) {
         for (PathModel pathModel : pathModels) {
-            pathModel.getPathPaint().setStrokeWidth(pathModel.getPathPaint().getStrokeWidth() * ratio);
+            pathModel.setStrokeRatio(ratio);
         }
     }
 

@@ -5,30 +5,21 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#1A1A1A"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
     <com.sdsmdg.harjot.vectormaster.VectorMasterView
         android:id="@+id/vector_master"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_above="@+id/center_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="5dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
         app:vector_src="@drawable/ic_cloud_lightning" />
 
-    <View
-        android:id="@+id/center_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true" />
-
     <ImageView
-        android:id="@+id/vector_compat"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_below="@+id/center_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        app:srcCompat="@drawable/ic_cloud_drizzle" />
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_cloud_lightning" />
 
 </RelativeLayout>
