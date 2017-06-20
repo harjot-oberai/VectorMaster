@@ -44,6 +44,6 @@
         android:pathData="M20,16.58A5,5 0,0 0,18 7h-1.26A8,8 0,1 0,4 15.25"
         android:strokeColor="#000"
         android:strokeLineCap="round"
-        android:strokeLineJoin="bevel"
+        android:strokeLineJoin="round"
         android:strokeWidth="2" />
 </vector>

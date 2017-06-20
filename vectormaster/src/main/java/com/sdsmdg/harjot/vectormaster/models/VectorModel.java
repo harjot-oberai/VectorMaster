@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.PointF;
 
+import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class VectorModel {
 
     private String name;
 
-    private int width, height;
+    private float width, height;
 
     private float alpha = 1.0f;
 
@@ -31,6 +32,15 @@ public class VectorModel {
     public VectorModel() {
         pathModels = new ArrayList<>();
         fullpath = new Path();
+    }
+
+    public int getMaxStrokeWidth() {
+        int maxStroke = 0;
+        for (PathModel pathModel : pathModels) {
+            if (pathModel.getStrokeWidth() > maxStroke)
+                maxStroke = (int) pathModel.getStrokeWidth();
+        }
+        return (int) (maxStroke * DefaultValues.STROKE_MULTIPLIER);
     }
 
     public ArrayList<PathModel> getPathModels() {
@@ -61,19 +71,19 @@ public class VectorModel {
         this.name = name;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         this.height = height;
     }
 

@@ -68,4 +68,11 @@ public class Utils {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
+    public static float getFloatFromDimensionString(String value) {
+        if (value.contains("dip"))
+            return Float.parseFloat(value.substring(0, value.length() - 3));
+        else
+            return Float.parseFloat(value.substring(0, value.length() - 2));
+    }
+
 }
