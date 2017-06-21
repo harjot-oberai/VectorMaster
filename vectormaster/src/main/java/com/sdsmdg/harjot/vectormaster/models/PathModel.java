@@ -53,9 +53,9 @@ public class PathModel {
         updatePaint();
     }
 
-    public void buildPath() {
-        if (VectorMasterView.useAndroidParser) {
-            path = com.sdsmdg.harjot.vectormaster.utilities.androidparser.PathParser.createPathFromPathData(pathData);
+    public void buildPath(boolean useLegacyParser) {
+        if (useLegacyParser) {
+            path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
         } else {
             path = PathParser.doPath(pathData);
         }

@@ -13,8 +13,8 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
-        app:use_android_parser="true"
-        app:vector_src="@drawable/ic_cloud_snow" />
+        app:use_legacy_parser="true"
+        app:vector_src="@drawable/ic_facebook" />
 
     <ImageView
         android:layout_width="150dp"

@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
@@ -26,7 +25,7 @@ public class VectorMasterView extends View {
 
     Resources resources;
     int resID = -1;
-    public static boolean useAndroidParser = false;
+    boolean useLegacyParser = false;
 
     XmlPullParser xpp;
 
@@ -64,8 +63,8 @@ public class VectorMasterView extends View {
             int attr = a.getIndex(i);
             if (attr == R.styleable.VectorMasterView_vector_src) {
                 resID = a.getResourceId(attr, -1);
-            } else if (attr == R.styleable.VectorMasterView_use_android_parser) {
-                useAndroidParser = a.getBoolean(attr, false);
+            } else if (attr == R.styleable.VectorMasterView_use_legacy_parser) {
+                useLegacyParser = a.getBoolean(attr, false);
             }
         }
         a.recycle();
@@ -128,7 +127,7 @@ public class VectorMasterView extends View {
                             tempPosition = getAttrPosition(xpp, "strokeWidth");
                             pathModel.setStrokeWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_WIDTH);
 
-                            pathModel.buildPath();
+                            pathModel.buildPath(useLegacyParser);
 
                             vectorModel.addPathModel(pathModel);
                             vectorModel.getFullpath().addPath(pathModel.getPath());
