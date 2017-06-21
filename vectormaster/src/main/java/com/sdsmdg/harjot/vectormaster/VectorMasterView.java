@@ -26,6 +26,7 @@ public class VectorMasterView extends View {
 
     Resources resources;
     int resID = -1;
+    public static boolean useAndroidParser = false;
 
     XmlPullParser xpp;
 
@@ -63,6 +64,8 @@ public class VectorMasterView extends View {
             int attr = a.getIndex(i);
             if (attr == R.styleable.VectorMasterView_vector_src) {
                 resID = a.getResourceId(attr, -1);
+            } else if (attr == R.styleable.VectorMasterView_use_android_parser) {
+                useAndroidParser = a.getBoolean(attr, false);
             }
         }
         a.recycle();

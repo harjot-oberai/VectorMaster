@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="VectorMasterView">
         <attr name="vector_src" format="reference" />
+        <attr name="use_android_parser" format="boolean" />
     </declare-styleable>
 </resources>

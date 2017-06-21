@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
+import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
 import com.sdsmdg.harjot.vectormaster.utilities.parser.PathParser;
 
@@ -53,7 +54,11 @@ public class PathModel {
     }
 
     public void buildPath() {
-        path = PathParser.doPath(pathData);
+        if (VectorMasterView.useAndroidParser) {
+            path = com.sdsmdg.harjot.vectormaster.utilities.androidparser.PathParser.createPathFromPathData(pathData);
+        } else {
+            path = PathParser.doPath(pathData);
+        }
         if (path != null)
             path.setFillType(fillType);
     }

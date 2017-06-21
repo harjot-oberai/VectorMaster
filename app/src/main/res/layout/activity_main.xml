@@ -13,7 +13,8 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_centerInParent="true"
-        app:vector_src="@drawable/ic_cloud_lightning" />
+        app:use_android_parser="true"
+        app:vector_src="@drawable/ic_cloud_snow" />
 
     <ImageView
         android:layout_width="150dp"
