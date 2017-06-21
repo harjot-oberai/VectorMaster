@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A"
+    android:background="#FFFFFF"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
     <com.sdsmdg.harjot.vectormaster.VectorMasterView
@@ -20,6 +20,6 @@
         android:layout_height="150dp"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_cloud_lightning" />
+        app:srcCompat="@drawable/ic_cloud_snow" />
 
 </RelativeLayout>

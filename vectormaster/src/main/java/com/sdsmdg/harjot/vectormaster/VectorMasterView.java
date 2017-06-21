@@ -245,6 +245,10 @@ public class VectorMasterView extends View {
         return null;
     }
 
+    public PathModel getPathModelByIndex(int i) {
+        return vectorModel.getPathModels().get(i);
+    }
+
     public void update() {
         invalidate();
     }
