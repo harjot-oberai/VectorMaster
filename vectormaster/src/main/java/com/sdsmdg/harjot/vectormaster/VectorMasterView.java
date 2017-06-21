@@ -55,8 +55,6 @@ public class VectorMasterView extends View {
     void init(AttributeSet attrs) {
         resources = context.getResources();
 
-        vectorModel = new VectorModel();
-
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VectorMasterView);
         final int N = a.getIndexCount();
         for (int i = 0; i < N; ++i) {
@@ -91,7 +89,27 @@ public class VectorMasterView extends View {
                 String name = xpp.getName();
                 switch (event) {
                     case XmlPullParser.START_TAG:
-                        if (name.equals("path")) {
+                        if (name.equals("vector")) {
+                            vectorModel = new VectorModel();
+
+                            tempPosition = getAttrPosition(xpp, "viewportWidth");
+                            vectorModel.setViewportWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_VIEWPORT_WIDTH);
+
+                            tempPosition = getAttrPosition(xpp, "viewportHeight");
+                            vectorModel.setViewportHeight((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_VIEWPORT_HEIGHT);
+
+                            tempPosition = getAttrPosition(xpp, "alpha");
+                            vectorModel.setAlpha((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_ALPHA);
+
+                            tempPosition = getAttrPosition(xpp, "name");
+                            vectorModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+
+                            tempPosition = getAttrPosition(xpp, "width");
+                            vectorModel.setWidth((tempPosition != -1) ? Utils.getFloatFromDimensionString(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_WIDTH);
+
+                            tempPosition = getAttrPosition(xpp, "height");
+                            vectorModel.setHeight((tempPosition != -1) ? Utils.getFloatFromDimensionString(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_HEIGHT);
+                        } else if (name.equals("path")) {
                             pathModel = new PathModel();
 
                             tempPosition = getAttrPosition(xpp, "name");
@@ -131,24 +149,8 @@ public class VectorMasterView extends View {
 
                             vectorModel.addPathModel(pathModel);
                             vectorModel.getFullpath().addPath(pathModel.getPath());
-                        } else if (name.equals("vector")) {
-                            tempPosition = getAttrPosition(xpp, "viewportWidth");
-                            vectorModel.setViewportWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_VIEWPORT_WIDTH);
-
-                            tempPosition = getAttrPosition(xpp, "viewportHeight");
-                            vectorModel.setViewportHeight((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_VIEWPORT_HEIGHT);
-
-                            tempPosition = getAttrPosition(xpp, "alpha");
-                            vectorModel.setAlpha((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_ALPHA);
-
-                            tempPosition = getAttrPosition(xpp, "name");
-                            vectorModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
-
-                            tempPosition = getAttrPosition(xpp, "width");
-                            vectorModel.setWidth((tempPosition != -1) ? Utils.getFloatFromDimensionString(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_WIDTH);
-
-                            tempPosition = getAttrPosition(xpp, "height");
-                            vectorModel.setHeight((tempPosition != -1) ? Utils.getFloatFromDimensionString(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_HEIGHT);
+                        } else if (name.equals("group")) {
+                            //TODO : parse group
                         }
                         break;
 
