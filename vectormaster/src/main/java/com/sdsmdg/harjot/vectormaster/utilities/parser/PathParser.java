@@ -29,7 +29,7 @@ public class PathParser {
      */
     public static Path doPath(String s) {
         int n = s.length();
-            ParserHelper ph = new ParserHelper(s);
+        ParserHelper ph = new ParserHelper(s);
         ph.skipWhitespace();
         Path p = new Path();
         float lastX = 0;
@@ -87,13 +87,21 @@ public class PathParser {
                     float x = ph.nextFloat();
                     float y = ph.nextFloat();
                     if (cmd == 'l') {
-                        p.rLineTo(x, y);
-                        lastX += x;
-                        lastY += y;
+                        if (x == 0 && y == 0) {
+                            p.addCircle(x, y, 1f, Path.Direction.CW);
+                        } else {
+                            p.rLineTo(x, y);
+                            lastX += x;
+                            lastY += y;
+                        }
                     } else {
-                        p.lineTo(x, y);
-                        lastX = x;
-                        lastY = y;
+                        if (x == lastX && y == lastY) {
+                            p.addCircle(x, y, 1f, Path.Direction.CW);
+                        } else {
+                            p.lineTo(x, y);
+                            lastX = x;
+                            lastY = y;
+                        }
                     }
                     break;
                 }
@@ -196,7 +204,7 @@ public class PathParser {
                     }
                     float x1 = 2 * lastX - lastX1;
                     float y1 = 2 * lastY - lastY1;
-                    p.cubicTo( lastX, lastY, x1, y1, x, y );
+                    p.cubicTo(lastX, lastY, x1, y1, x, y);
                     lastX = x;
                     lastY = y;
                     lastX1 = x1;
@@ -216,7 +224,7 @@ public class PathParser {
                         x1 += lastX;
                         y1 += lastY;
                     }
-                    p.cubicTo( lastX, lastY, x1, y1, x, y );
+                    p.cubicTo(lastX, lastY, x1, y1, x, y);
                     lastX1 = x1;
                     lastY1 = y1;
                     lastX = x;
