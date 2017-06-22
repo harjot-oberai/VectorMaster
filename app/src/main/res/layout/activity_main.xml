@@ -12,15 +12,22 @@
         android:id="@+id/vector_master"
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_above="@+id/center"
         android:layout_centerInParent="true"
         app:use_legacy_parser="true"
-        app:vector_src="@drawable/ic_facebook" />
+        app:vector_src="@drawable/group_vector" />
+
+    <View
+        android:id="@+id/center"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
 
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
+        android:layout_below="@+id/center"
         android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_facebook" />
+        app:srcCompat="@drawable/group_vector" />
 
 </RelativeLayout>

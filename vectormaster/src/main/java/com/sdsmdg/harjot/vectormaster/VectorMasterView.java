@@ -190,10 +190,14 @@ public class VectorMasterView extends View {
                         } else if (name.equals("group")) {
                             GroupModel topGroupModel = groupModelStack.pop();
                             if (groupModelStack.size() == 0) {
+                                topGroupModel.setParent(null);
                                 vectorModel.addGroupModel(topGroupModel);
                             } else {
+                                topGroupModel.setParent(groupModelStack.peek());
                                 groupModelStack.peek().addGroupModel(topGroupModel);
                             }
+                        } else if (name.equals("vector")) {
+                            vectorModel.buildTransformMatrices();
                         }
                         break;
                 }

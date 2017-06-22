@@ -69,6 +69,12 @@ public class VectorModel {
         }
     }
 
+    public void buildTransformMatrices() {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.buildTransformMatrix();
+        }
+    }
+
     public void addGroupModel(GroupModel groupModel) {
         groupModels.add(groupModel);
     }

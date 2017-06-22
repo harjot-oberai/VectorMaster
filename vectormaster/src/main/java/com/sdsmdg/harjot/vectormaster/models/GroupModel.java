@@ -16,6 +16,9 @@ public class GroupModel {
     private float scaleX, scaleY;
     private float translateX, translateY;
 
+    private Matrix transformMatrix;
+    private GroupModel parent;
+
     private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
 
@@ -30,7 +33,6 @@ public class GroupModel {
 
         groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
-
     }
 
     public void drawPaths(Canvas canvas) {
@@ -50,11 +52,12 @@ public class GroupModel {
     }
 
     public void scaleAllPaths(Matrix scaleMatrix) {
+        transformMatrix.postConcat(scaleMatrix);
         for (GroupModel groupModel : groupModels) {
             groupModel.scaleAllPaths(scaleMatrix);
         }
         for (PathModel pathModel : pathModels) {
-            pathModel.getPath().transform(scaleMatrix);
+            pathModel.getPath().transform(transformMatrix);
         }
     }
 
@@ -65,6 +68,35 @@ public class GroupModel {
         for (PathModel pathModel : pathModels) {
             pathModel.setStrokeRatio(ratio);
         }
+    }
+
+    public void buildTransformMatrix() {
+        if (parent == null) {
+            transformMatrix = new Matrix();
+        } else {
+            transformMatrix = parent.getTransformMatrix();
+        }
+
+        transformMatrix.postScale(scaleX, scaleY);
+        transformMatrix.postRotate(rotation, pivotX, pivotY);
+        transformMatrix.postTranslate(translateX, translateY);
+
+        for (GroupModel groupModel : groupModels) {
+            groupModel.buildTransformMatrix();
+        }
+
+    }
+
+    public Matrix getTransformMatrix() {
+        return transformMatrix;
+    }
+
+    public GroupModel getParent() {
+        return parent;
+    }
+
+    public void setParent(GroupModel parent) {
+        this.parent = parent;
     }
 
     public void addGroupModel(GroupModel groupModel) {
