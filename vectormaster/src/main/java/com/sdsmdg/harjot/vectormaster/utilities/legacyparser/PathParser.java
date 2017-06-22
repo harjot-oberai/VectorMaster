@@ -344,21 +344,29 @@ public class PathParser {
             for (int k = 0; k < val.length; k += incr) {
                 switch (cmd) {
                     case 'm': // moveto - Start a new sub-path (relative)
-                        path.rMoveTo(val[k + 0], val[k + 1]);
                         currentX += val[k + 0];
                         currentY += val[k + 1];
-                        currentSegmentStartX = currentX;
-                        currentSegmentStartY = currentY;
+                        if (k > 0) {
+                            path.rLineTo(val[k + 0], val[k + 1]);
+                        } else {
+                            path.rMoveTo(val[k + 0], val[k + 1]);
+                            currentSegmentStartX = currentX;
+                            currentSegmentStartY = currentY;
+                        }
                         break;
                     case 'M': // moveto - Start a new sub-path
-                        path.moveTo(val[k + 0], val[k + 1]);
                         currentX = val[k + 0];
                         currentY = val[k + 1];
-                        currentSegmentStartX = currentX;
-                        currentSegmentStartY = currentY;
+                        if (k > 0) {
+                            path.lineTo(val[k + 0], val[k + 1]);
+                        } else {
+                            path.moveTo(val[k + 0], val[k + 1]);
+                            currentSegmentStartX = currentX;
+                            currentSegmentStartY = currentY;
+                        }
                         break;
                     case 'l': // lineto - Draw a line from the current point (relative)
-                        if (val[k + 0] == 0 && val[k + 1] == 0) {
+                        if ((previousCmd == 'M' || previousCmd == 'm') && val[k + 0] == 0 && val[k + 1] == 0) {
                             path.addCircle(val[k + 0], val[k + 1], 1, Path.Direction.CW);
                         } else {
                             path.rLineTo(val[k + 0], val[k + 1]);
@@ -367,7 +375,7 @@ public class PathParser {
                         }
                         break;
                     case 'L': // lineto - Draw a line from the current point
-                        if (val[k + 0] == currentX && val[k + 1] == currentY) {
+                        if ((previousCmd == 'M' || previousCmd == 'm') && val[k + 0] == currentX && val[k + 1] == currentY) {
                             path.addCircle(val[k + 0], val[k + 1], 1, Path.Direction.CW);
                         } else {
                             path.lineTo(val[k + 0], val[k + 1]);

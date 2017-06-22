@@ -1,11 +1,10 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
-import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Path;
-import android.graphics.PointF;
 
-import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
 import java.util.ArrayList;
@@ -25,31 +24,74 @@ public class VectorModel {
 
     private float viewportWidth, viewportHeight;
 
+    private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
 
     private Path fullpath;
 
+    private Matrix scaleMatrix;
+
     public VectorModel() {
+        groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
         fullpath = new Path();
     }
 
-    public void updateAllPathPaintStroke(float ratio) {
+    public void drawPaths(Canvas canvas) {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.drawPaths(canvas);
+        }
+        for (PathModel pathModel : pathModels) {
+            if (pathModel.isFillAndStroke()) {
+                pathModel.makeFillPaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                pathModel.makeStrokePaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            } else {
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            }
+        }
+    }
+
+    public void scaleAllPaths(Matrix scaleMatrix) {
+        this.scaleMatrix = scaleMatrix;
+        for (GroupModel groupModel : groupModels) {
+            groupModel.scaleAllPaths(scaleMatrix);
+        }
+        for (PathModel pathModel : pathModels) {
+            pathModel.getPath().transform(scaleMatrix);
+        }
+    }
+
+    public void scaleAllStrokeWidth(float ratio) {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.scaleAllStrokeWidth(ratio);
+        }
         for (PathModel pathModel : pathModels) {
             pathModel.setStrokeRatio(ratio);
         }
     }
 
-    public ArrayList<PathModel> getPathModels() {
-        return pathModels;
+    public void buildTransformMatrices() {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.buildTransformMatrix();
+        }
     }
 
-    public void setPathModels(ArrayList<PathModel> pathModels) {
-        this.pathModels = pathModels;
+    public void addGroupModel(GroupModel groupModel) {
+        groupModels.add(groupModel);
+    }
+
+    public ArrayList<GroupModel> getGroupModels() {
+        return groupModels;
     }
 
     public void addPathModel(PathModel pathModel) {
         pathModels.add(pathModel);
+    }
+
+    public ArrayList<PathModel> getPathModels() {
+        return pathModels;
     }
 
     public Path getFullpath() {
