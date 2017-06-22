@@ -25,11 +25,13 @@ public class VectorModel {
 
     private float viewportWidth, viewportHeight;
 
+    private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
 
     private Path fullpath;
 
     public VectorModel() {
+        groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
         fullpath = new Path();
     }
@@ -40,16 +42,20 @@ public class VectorModel {
         }
     }
 
-    public ArrayList<PathModel> getPathModels() {
-        return pathModels;
+    public void addGroupModel(GroupModel groupModel) {
+        groupModels.add(groupModel);
     }
 
-    public void setPathModels(ArrayList<PathModel> pathModels) {
-        this.pathModels = pathModels;
+    public ArrayList<GroupModel> getGroupModels() {
+        return groupModels;
     }
 
     public void addPathModel(PathModel pathModel) {
         pathModels.add(pathModel);
+    }
+
+    public ArrayList<PathModel> getPathModels() {
+        return pathModels;
     }
 
     public Path getFullpath() {

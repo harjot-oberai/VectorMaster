@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.sdsmdg.harjot.vectormaster.models.GroupModel;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.sdsmdg.harjot.vectormaster.models.VectorModel;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
@@ -16,11 +17,11 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.Stack;
 
 public class VectorMasterView extends View {
 
     VectorModel vectorModel;
-
     Context context;
 
     Resources resources;
@@ -81,7 +82,10 @@ public class VectorMasterView extends View {
         xpp = resources.getXml(resID);
 
         int tempPosition;
-        PathModel pathModel;
+        PathModel pathModel = new PathModel();
+        vectorModel = new VectorModel();
+        GroupModel groupModel = new GroupModel();
+        Stack<GroupModel> groupModelStack = new Stack<>();
 
         try {
             int event = xpp.getEventType();
@@ -90,8 +94,6 @@ public class VectorMasterView extends View {
                 switch (event) {
                     case XmlPullParser.START_TAG:
                         if (name.equals("vector")) {
-                            vectorModel = new VectorModel();
-
                             tempPosition = getAttrPosition(xpp, "viewportWidth");
                             vectorModel.setViewportWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.VECTOR_VIEWPORT_WIDTH);
 
@@ -146,15 +148,53 @@ public class VectorMasterView extends View {
                             pathModel.setStrokeWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_WIDTH);
 
                             pathModel.buildPath(useLegacyParser);
-
-                            vectorModel.addPathModel(pathModel);
-                            vectorModel.getFullpath().addPath(pathModel.getPath());
                         } else if (name.equals("group")) {
-                            //TODO : parse group
+                            groupModel = new GroupModel();
+
+                            tempPosition = getAttrPosition(xpp, "name");
+                            groupModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+
+                            tempPosition = getAttrPosition(xpp, "pivotX");
+                            groupModel.setPivotX((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_PIVOT_X);
+
+                            tempPosition = getAttrPosition(xpp, "pivotY");
+                            groupModel.setPivotY((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_PIVOT_Y);
+
+                            tempPosition = getAttrPosition(xpp, "rotation");
+                            groupModel.setRotation((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_ROTATION);
+
+                            tempPosition = getAttrPosition(xpp, "scaleX");
+                            groupModel.setScaleX((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_SCALE_X);
+
+                            tempPosition = getAttrPosition(xpp, "scaleY");
+                            groupModel.setScaleY((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_SCALE_Y);
+
+                            tempPosition = getAttrPosition(xpp, "translateX");
+                            groupModel.setTranslateX((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_TRANSLATE_X);
+
+                            tempPosition = getAttrPosition(xpp, "translateY");
+                            groupModel.setTranslateY((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_TRANSLATE_Y);
+
+                            groupModelStack.push(groupModel);
                         }
                         break;
 
                     case XmlPullParser.END_TAG:
+                        if (name.equals("path")) {
+                            if (groupModelStack.size() == 0) {
+                                vectorModel.addPathModel(pathModel);
+                            } else {
+                                groupModelStack.peek().addPathModel(pathModel);
+                            }
+                            vectorModel.getFullpath().addPath(pathModel.getPath());
+                        } else if (name.equals("group")) {
+                            GroupModel topGroupModel = groupModelStack.pop();
+                            if (groupModelStack.size() == 0) {
+                                vectorModel.addGroupModel(topGroupModel);
+                            } else {
+                                groupModelStack.peek().addGroupModel(topGroupModel);
+                            }
+                        }
                         break;
                 }
                 event = xpp.next();

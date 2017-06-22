@@ -13,6 +13,7 @@ public class GroupModel {
     private float scaleX, scaleY;
     private float translateX, translateY;
 
+    private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
 
     public GroupModel() {
@@ -24,8 +25,17 @@ public class GroupModel {
         translateX = DefaultValues.GROUP_TRANSLATE_X;
         translateY = DefaultValues.GROUP_TRANSLATE_Y;
 
+        groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
 
+    }
+
+    public void addGroupModel(GroupModel groupModel) {
+        groupModels.add(groupModel);
+    }
+
+    public ArrayList<GroupModel> getGroupModels() {
+        return groupModels;
     }
 
     public void addPathModel(PathModel pathModel) {
