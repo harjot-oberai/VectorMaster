@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.sdsmdg.harjot.vectormaster.models.ClipPathModel;
 import com.sdsmdg.harjot.vectormaster.models.GroupModel;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.sdsmdg.harjot.vectormaster.models.VectorModel;
@@ -85,6 +86,7 @@ public class VectorMasterView extends View {
         PathModel pathModel = new PathModel();
         vectorModel = new VectorModel();
         GroupModel groupModel = new GroupModel();
+        ClipPathModel clipPathModel = new ClipPathModel();
         Stack<GroupModel> groupModelStack = new Stack<>();
 
         try {
@@ -176,6 +178,16 @@ public class VectorMasterView extends View {
                             groupModel.setTranslateY((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.GROUP_TRANSLATE_Y);
 
                             groupModelStack.push(groupModel);
+                        } else if (name.equals("clip-path")) {
+                            clipPathModel = new ClipPathModel();
+
+                            tempPosition = getAttrPosition(xpp, "name");
+                            clipPathModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+
+                            tempPosition = getAttrPosition(xpp, "pathData");
+                            clipPathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+
+                            clipPathModel.buildPath(useLegacyParser);
                         }
                         break;
 
@@ -187,6 +199,12 @@ public class VectorMasterView extends View {
                                 groupModelStack.peek().addPathModel(pathModel);
                             }
                             vectorModel.getFullpath().addPath(pathModel.getPath());
+                        } else if (name.equals("clip-path")) {
+                            if (groupModelStack.size() == 0) {
+                                vectorModel.addClipPathModel(clipPathModel);
+                            } else {
+                                groupModelStack.peek().addClipPathModel(clipPathModel);
+                            }
                         } else if (name.equals("group")) {
                             GroupModel topGroupModel = groupModelStack.pop();
                             if (groupModelStack.size() == 0) {

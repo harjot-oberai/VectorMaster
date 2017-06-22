@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Path;
+import android.graphics.Region;
 
 import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
@@ -26,6 +27,7 @@ public class VectorModel {
 
     private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
+    private ArrayList<ClipPathModel> clipPathModels;
 
     private Path fullpath;
 
@@ -34,10 +36,14 @@ public class VectorModel {
     public VectorModel() {
         groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
+        clipPathModels = new ArrayList<>();
         fullpath = new Path();
     }
 
     public void drawPaths(Canvas canvas) {
+        for (ClipPathModel clipPathModel : clipPathModels) {
+            canvas.clipPath(clipPathModel.getPath());
+        }
         for (GroupModel groupModel : groupModels) {
             groupModel.drawPaths(canvas);
         }
@@ -60,6 +66,9 @@ public class VectorModel {
         }
         for (PathModel pathModel : pathModels) {
             pathModel.getPath().transform(scaleMatrix);
+        }
+        for (ClipPathModel clipPathModel : clipPathModels) {
+            clipPathModel.getPath().transform(scaleMatrix);
         }
     }
 
@@ -92,6 +101,14 @@ public class VectorModel {
 
     public ArrayList<PathModel> getPathModels() {
         return pathModels;
+    }
+
+    public void addClipPathModel(ClipPathModel clipPathModel) {
+        clipPathModels.add(clipPathModel);
+    }
+
+    public ArrayList<ClipPathModel> getClipPathModels() {
+        return clipPathModels;
     }
 
     public Path getFullpath() {
