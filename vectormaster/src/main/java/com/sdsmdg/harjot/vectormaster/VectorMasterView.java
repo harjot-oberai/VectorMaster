@@ -295,25 +295,6 @@ public class VectorMasterView extends View {
         vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
     }
 
-    public PathModel getPathModelByName(String name) {
-        PathModel pModel = null;
-        for (PathModel pathModel : vectorModel.getPathModels()) {
-            if (pathModel.getName().equals(name)) {
-                return pathModel;
-            }
-        }
-        for (GroupModel groupModel : vectorModel.getGroupModels()) {
-            pModel = groupModel.getPathModelByName(name);
-            if (pModel.getName().equals(name))
-                return pModel;
-        }
-        return pModel;
-    }
-
-    public PathModel getPathModelByIndex(int i) {
-        return vectorModel.getPathModels().get(i);
-    }
-
     public GroupModel getGroupModelByName(String name) {
         GroupModel gModel;
         for (GroupModel groupModel : vectorModel.getGroupModels()) {
@@ -326,6 +307,36 @@ public class VectorMasterView extends View {
             }
         }
         return null;
+    }
+
+    public PathModel getPathModelByName(String name) {
+        PathModel pModel = null;
+        for (PathModel pathModel : vectorModel.getPathModels()) {
+            if (pathModel.getName().equals(name)) {
+                return pathModel;
+            }
+        }
+        for (GroupModel groupModel : vectorModel.getGroupModels()) {
+            pModel = groupModel.getPathModelByName(name);
+            if (pModel != null && pModel.getName().equals(name))
+                return pModel;
+        }
+        return pModel;
+    }
+
+    public ClipPathModel getClipPathModelByName(String name) {
+        ClipPathModel cModel = null;
+        for (ClipPathModel clipPathModel : vectorModel.getClipPathModels()) {
+            if (clipPathModel.getName().equals(name)) {
+                return clipPathModel;
+            }
+        }
+        for (GroupModel groupModel : vectorModel.getGroupModels()) {
+            cModel = groupModel.getClipPathModelByName(name);
+            if (cModel != null && cModel.getName().equals(name))
+                return cModel;
+        }
+        return cModel;
     }
 
     public void update() {

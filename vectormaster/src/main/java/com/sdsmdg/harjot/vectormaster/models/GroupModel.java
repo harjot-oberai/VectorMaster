@@ -131,10 +131,25 @@ public class GroupModel {
         }
         for (GroupModel groupModel : groupModels) {
             pModel = groupModel.getPathModelByName(name);
-            if (pModel.getName().equals(name))
+            if (pModel != null && pModel.getName().equals(name))
                 return pModel;
         }
         return pModel;
+    }
+
+    public ClipPathModel getClipPathModelByName(String name) {
+        ClipPathModel cModel = null;
+        for (ClipPathModel clipPathModel : getClipPathModels()) {
+            if (clipPathModel.getName().equals(name)) {
+                return clipPathModel;
+            }
+        }
+        for (GroupModel groupModel : getGroupModels()) {
+            cModel = groupModel.getClipPathModelByName(name);
+            if (cModel != null && cModel.getName().equals(name))
+                return cModel;
+        }
+        return cModel;
     }
 
     public Matrix getOriginalTransformMatrix() {
