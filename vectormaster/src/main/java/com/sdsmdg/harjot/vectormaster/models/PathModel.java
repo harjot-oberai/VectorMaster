@@ -82,6 +82,8 @@ public class PathModel {
             pathPaint.setAlpha(Utils.getAlphaFromFloat(strokeAlpha));
             pathPaint.setStyle(Paint.Style.STROKE);
             isFillAndStroke = false;
+        } else {
+            pathPaint.setColor(Color.TRANSPARENT);
         }
 
         pathPaint.setStrokeCap(strokeLineCap);
