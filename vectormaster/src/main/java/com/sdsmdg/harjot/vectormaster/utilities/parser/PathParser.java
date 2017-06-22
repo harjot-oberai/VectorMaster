@@ -39,6 +39,7 @@ public class PathParser {
         float contourInitialX = 0;
         float contourInitialY = 0;
         RectF r = new RectF();
+        char prevCmd = 'm';
         char cmd = 'x';
         while (ph.pos < n) {
             char next = s.charAt(ph.pos);
@@ -87,7 +88,7 @@ public class PathParser {
                     float x = ph.nextFloat();
                     float y = ph.nextFloat();
                     if (cmd == 'l') {
-                        if (x == 0 && y == 0) {
+                        if ((prevCmd == 'M' || prevCmd == 'm') && x == 0 && y == 0) {
                             p.addCircle(x, y, 1f, Path.Direction.CW);
                         } else {
                             p.rLineTo(x, y);
@@ -95,7 +96,7 @@ public class PathParser {
                             lastY += y;
                         }
                     } else {
-                        if (x == lastX && y == lastY) {
+                        if ((prevCmd == 'M' || prevCmd == 'm') && x == lastX && y == lastY) {
                             p.addCircle(x, y, 1f, Path.Direction.CW);
                         } else {
                             p.lineTo(x, y);
@@ -235,6 +236,7 @@ public class PathParser {
                     Log.w(TAG, "Invalid path command: " + cmd);
                     ph.advance();
             }
+            prevCmd = cmd;
             if (!wasCurve) {
                 lastX1 = lastX;
                 lastY1 = lastY;
