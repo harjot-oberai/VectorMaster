@@ -3,6 +3,7 @@ package com.sdsmdg.harjot.vectormaster.models;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Region;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 
@@ -23,6 +24,7 @@ public class GroupModel {
 
     private ArrayList<GroupModel> groupModels;
     private ArrayList<PathModel> pathModels;
+    private ArrayList<ClipPathModel> clipPathModels;
 
     public GroupModel() {
         rotation = DefaultValues.GROUP_ROTATION;
@@ -35,9 +37,13 @@ public class GroupModel {
 
         groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
+        clipPathModels = new ArrayList<>();
     }
 
     public void drawPaths(Canvas canvas) {
+        for (ClipPathModel clipPathModel : clipPathModels) {
+            canvas.clipPath(clipPathModel.getPath());
+        }
         for (GroupModel groupModel : groupModels) {
             groupModel.drawPaths(canvas);
         }
@@ -62,6 +68,9 @@ public class GroupModel {
         }
         for (PathModel pathModel : pathModels) {
             pathModel.transform(finalTransformMatrix);
+        }
+        for (ClipPathModel clipPathModel : clipPathModels) {
+            clipPathModel.transform(finalTransformMatrix);
         }
     }
 
@@ -154,6 +163,14 @@ public class GroupModel {
 
     public ArrayList<PathModel> getPathModels() {
         return pathModels;
+    }
+
+    public void addClipPathModel(ClipPathModel clipPathModel) {
+        clipPathModels.add(clipPathModel);
+    }
+
+    public ArrayList<ClipPathModel> getClipPathModels() {
+        return clipPathModels;
     }
 
     public String getName() {

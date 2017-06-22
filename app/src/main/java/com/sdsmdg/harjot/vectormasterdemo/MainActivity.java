@@ -21,19 +21,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        vectorMasterView = (VectorMasterView) findViewById(R.id.vector_master);
-
-        groupModel = vectorMasterView.getGroupModelByName("rotationGroup");
-        pathModel = vectorMasterView.getPathModelByName("draw");
-
-        vectorMasterView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                groupModel.setRotation(45);
-                pathModel.setFillColor(Color.GREEN);
-                vectorMasterView.update();
-            }
-        });
-
+//        vectorMasterView = (VectorMasterView) findViewById(R.id.vector_master);
     }
 }
