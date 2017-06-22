@@ -29,6 +29,8 @@ public class VectorModel {
 
     private Path fullpath;
 
+    private Matrix scaleMatrix;
+
     public VectorModel() {
         groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
@@ -52,6 +54,7 @@ public class VectorModel {
     }
 
     public void scaleAllPaths(Matrix scaleMatrix) {
+        this.scaleMatrix = scaleMatrix;
         for (GroupModel groupModel : groupModels) {
             groupModel.scaleAllPaths(scaleMatrix);
         }

@@ -1,6 +1,7 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 
@@ -33,6 +34,7 @@ public class PathModel {
 
     // Support for trim-paths is not available
 
+    private Path originalPath;
     private Path path;
     private Paint pathPaint;
 
@@ -55,12 +57,14 @@ public class PathModel {
 
     public void buildPath(boolean useLegacyParser) {
         if (useLegacyParser) {
-            path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+            originalPath = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
         } else {
-            path = PathParser.doPath(pathData);
+            originalPath = PathParser.doPath(pathData);
         }
-        if (path != null)
-            path.setFillType(fillType);
+        if (originalPath != null)
+            originalPath.setFillType(fillType);
+
+        path = new Path(originalPath);
     }
 
     public void updatePaint() {
@@ -95,6 +99,12 @@ public class PathModel {
         pathPaint.setColor(fillColor);
         pathPaint.setAlpha(Utils.getAlphaFromFloat(fillAlpha));
         pathPaint.setStyle(Paint.Style.FILL);
+    }
+
+    public void transform(Matrix matrix) {
+        path = new Path(originalPath);
+
+        path.transform(matrix);
     }
 
     public Path getPath() {
@@ -145,8 +155,8 @@ public class PathModel {
 
     public void setFillType(Path.FillType fillType) {
         this.fillType = fillType;
-        if (path != null)
-            path.setFillType(fillType);
+        if (originalPath != null)
+            originalPath.setFillType(fillType);
     }
 
     public String getPathData() {

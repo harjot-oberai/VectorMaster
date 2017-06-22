@@ -278,16 +278,36 @@ public class VectorMasterView extends View {
     }
 
     public PathModel getPathModelByName(String name) {
+        PathModel pModel = null;
         for (PathModel pathModel : vectorModel.getPathModels()) {
             if (pathModel.getName().equals(name)) {
                 return pathModel;
             }
         }
-        return null;
+        for (GroupModel groupModel : vectorModel.getGroupModels()) {
+            pModel = groupModel.getPathModelByName(name);
+            if (pModel.getName().equals(name))
+                return pModel;
+        }
+        return pModel;
     }
 
     public PathModel getPathModelByIndex(int i) {
         return vectorModel.getPathModels().get(i);
+    }
+
+    public GroupModel getGroupModelByName(String name) {
+        GroupModel gModel;
+        for (GroupModel groupModel : vectorModel.getGroupModels()) {
+            if (groupModel.getName().equals(name)) {
+                return groupModel;
+            } else {
+                gModel = groupModel.getGroupModelByName(name);
+                if (gModel != null)
+                    return gModel;
+            }
+        }
+        return null;
     }
 
     public void update() {

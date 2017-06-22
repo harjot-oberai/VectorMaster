@@ -16,7 +16,9 @@ public class GroupModel {
     private float scaleX, scaleY;
     private float translateX, translateY;
 
-    private Matrix transformMatrix;
+    private Matrix scaleMatrix;
+    private Matrix originalTransformMatrix;
+    private Matrix finalTransformMatrix;
     private GroupModel parent;
 
     private ArrayList<GroupModel> groupModels;
@@ -52,12 +54,14 @@ public class GroupModel {
     }
 
     public void scaleAllPaths(Matrix scaleMatrix) {
-        transformMatrix.postConcat(scaleMatrix);
+        this.scaleMatrix = scaleMatrix;
+        finalTransformMatrix = new Matrix(originalTransformMatrix);
+        finalTransformMatrix.postConcat(scaleMatrix);
         for (GroupModel groupModel : groupModels) {
             groupModel.scaleAllPaths(scaleMatrix);
         }
         for (PathModel pathModel : pathModels) {
-            pathModel.getPath().transform(transformMatrix);
+            pathModel.transform(finalTransformMatrix);
         }
     }
 
@@ -71,24 +75,61 @@ public class GroupModel {
     }
 
     public void buildTransformMatrix() {
-        if (parent == null) {
-            transformMatrix = new Matrix();
-        } else {
-            transformMatrix = parent.getTransformMatrix();
-        }
 
-        transformMatrix.postScale(scaleX, scaleY);
-        transformMatrix.postRotate(rotation, pivotX, pivotY);
-        transformMatrix.postTranslate(translateX, translateY);
+        originalTransformMatrix = new Matrix();
+
+        originalTransformMatrix.postScale(scaleX, scaleY);
+        originalTransformMatrix.postRotate(rotation, pivotX, pivotY);
+        originalTransformMatrix.postTranslate(translateX, translateY);
+
+        if (parent != null) {
+            originalTransformMatrix.postConcat(parent.getOriginalTransformMatrix());
+        }
 
         for (GroupModel groupModel : groupModels) {
             groupModel.buildTransformMatrix();
         }
-
     }
 
-    public Matrix getTransformMatrix() {
-        return transformMatrix;
+    public void updateAndScalePaths() {
+        if (scaleMatrix != null) {
+            buildTransformMatrix();
+            scaleAllPaths(scaleMatrix);
+        }
+    }
+
+    public GroupModel getGroupModelByName(String name) {
+        GroupModel grpModel = null;
+        for (GroupModel groupModel : groupModels) {
+            if (groupModel.getName().equals(name)) {
+                grpModel = groupModel;
+                return grpModel;
+            } else {
+                grpModel = groupModel.getGroupModelByName(name);
+                if (grpModel != null)
+                    return grpModel;
+            }
+        }
+        return grpModel;
+    }
+
+    public PathModel getPathModelByName(String name) {
+        PathModel pModel = null;
+        for (PathModel pathModel : pathModels) {
+            if (pathModel.getName().equals(name)) {
+                return pathModel;
+            }
+        }
+        for (GroupModel groupModel : groupModels) {
+            pModel = groupModel.getPathModelByName(name);
+            if (pModel.getName().equals(name))
+                return pModel;
+        }
+        return pModel;
+    }
+
+    public Matrix getOriginalTransformMatrix() {
+        return originalTransformMatrix;
     }
 
     public GroupModel getParent() {
@@ -129,6 +170,7 @@ public class GroupModel {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+        updateAndScalePaths();
     }
 
     public float getPivotX() {
@@ -153,6 +195,7 @@ public class GroupModel {
 
     public void setScaleX(float scaleX) {
         this.scaleX = scaleX;
+        updateAndScalePaths();
     }
 
     public float getScaleY() {
@@ -161,6 +204,7 @@ public class GroupModel {
 
     public void setScaleY(float scaleY) {
         this.scaleY = scaleY;
+        updateAndScalePaths();
     }
 
     public float getTranslateX() {
@@ -169,6 +213,7 @@ public class GroupModel {
 
     public void setTranslateX(float translateX) {
         this.translateX = translateX;
+        updateAndScalePaths();
     }
 
     public float getTranslateY() {
@@ -177,5 +222,6 @@ public class GroupModel {
 
     public void setTranslateY(float translateY) {
         this.translateY = translateY;
+        updateAndScalePaths();
     }
 }
