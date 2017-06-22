@@ -231,7 +231,7 @@ public class VectorMasterView extends View {
 
             buildScaleMatrix();
             scaleAllPaths();
-            vectorModel.updateAllPathPaintStroke(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+            scaleAllStrokes();
         }
     }
 
@@ -248,16 +248,7 @@ public class VectorMasterView extends View {
 
         setAlpha(vectorModel.getAlpha());
 
-        for (PathModel pathModel : vectorModel.getPathModels()) {
-            if (pathModel.isFillAndStroke()) {
-                pathModel.makeFillPaint();
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
-                pathModel.makeStrokePaint();
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
-            } else {
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
-            }
-        }
+        vectorModel.drawPaths(canvas);
 
     }
 
@@ -275,9 +266,11 @@ public class VectorMasterView extends View {
     }
 
     void scaleAllPaths() {
-        for (PathModel pathModel : vectorModel.getPathModels()) {
-            pathModel.getPath().transform(scaleMatrix);
-        }
+        vectorModel.scaleAllPaths(scaleMatrix);
+    }
+
+    void scaleAllStrokes() {
+        vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
     }
 
     public PathModel getPathModelByName(String name) {

@@ -21,6 +21,6 @@
         android:layout_height="150dp"
         android:layout_centerInParent="true"
         android:visibility="gone"
-        app:srcCompat="@drawable/ic_cloud_snow" />
+        app:srcCompat="@drawable/ic_facebook" />
 
 </RelativeLayout>

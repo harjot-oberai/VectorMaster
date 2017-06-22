@@ -1,6 +1,9 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
 
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 
 import java.util.ArrayList;
@@ -28,6 +31,40 @@ public class GroupModel {
         groupModels = new ArrayList<>();
         pathModels = new ArrayList<>();
 
+    }
+
+    public void drawPaths(Canvas canvas) {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.drawPaths(canvas);
+        }
+        for (PathModel pathModel : pathModels) {
+            if (pathModel.isFillAndStroke()) {
+                pathModel.makeFillPaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                pathModel.makeStrokePaint();
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            } else {
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+            }
+        }
+    }
+
+    public void scaleAllPaths(Matrix scaleMatrix) {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.scaleAllPaths(scaleMatrix);
+        }
+        for (PathModel pathModel : pathModels) {
+            pathModel.getPath().transform(scaleMatrix);
+        }
+    }
+
+    public void scaleAllStrokeWidth(float ratio) {
+        for (GroupModel groupModel : groupModels) {
+            groupModel.scaleAllStrokeWidth(ratio);
+        }
+        for (PathModel pathModel : pathModels) {
+            pathModel.setStrokeRatio(ratio);
+        }
     }
 
     public void addGroupModel(GroupModel groupModel) {
