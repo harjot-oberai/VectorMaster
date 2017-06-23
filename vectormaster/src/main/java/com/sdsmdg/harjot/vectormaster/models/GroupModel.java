@@ -87,7 +87,7 @@ public class GroupModel {
 
         originalTransformMatrix = new Matrix();
 
-        originalTransformMatrix.postScale(scaleX, scaleY);
+        originalTransformMatrix.postScale(scaleX, scaleY, pivotX, pivotY);
         originalTransformMatrix.postRotate(rotation, pivotX, pivotY);
         originalTransformMatrix.postTranslate(translateX, translateY);
 
