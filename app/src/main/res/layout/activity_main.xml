@@ -8,14 +8,55 @@
     android:background="#FFFFFF"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <com.sdsmdg.harjot.vectormaster.VectorMasterView
+            android:id="@+id/vector_master"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:rotation="90"
+            app:vector_src="@drawable/ic_cloud_lightning" />
+
+        <com.sdsmdg.harjot.vectormaster.VectorMasterView
+            android:id="@+id/vector_master_1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:rotation="90"
+            app:vector_src="@drawable/clip_vector" />
+
+        <com.sdsmdg.harjot.vectormaster.VectorMasterView
+            android:id="@+id/vector_master_2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:rotation="90"
+            app:vector_src="@drawable/ic_cloud_snow" />
+
+        <com.sdsmdg.harjot.vectormaster.VectorMasterView
+            android:id="@+id/vector_master_3"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="20dp"
+            android:rotation="90"
+            app:vector_src="@drawable/ic_diamond" />
+    </LinearLayout>
+
     <com.sdsmdg.harjot.vectormaster.VectorMasterView
-        android:id="@+id/vector_master"
+        android:id="@+id/vector_master_100"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_above="@+id/center"
         android:layout_centerInParent="true"
-        app:use_legacy_parser="true"
         app:vector_src="@drawable/ic_cloud_lightning" />
+
 
     <View
         android:id="@+id/center"

@@ -27,7 +27,7 @@ public class VectorMasterView extends View {
 
     Resources resources;
     int resID = -1;
-    boolean useLegacyParser = false;
+    boolean useLegacyParser = true;
 
     XmlPullParser xpp;
 

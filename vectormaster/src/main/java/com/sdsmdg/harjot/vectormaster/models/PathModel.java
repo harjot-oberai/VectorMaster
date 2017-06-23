@@ -42,7 +42,7 @@ public class PathModel {
     private Path trimmedPath;
     private Paint pathPaint;
 
-    boolean isScaled = false;
+    private Matrix scaleMatrix;
 
     public PathModel() {
         fillAlpha = DefaultValues.PATH_FILL_ALPHA;
@@ -113,20 +113,24 @@ public class PathModel {
     }
 
     public void transform(Matrix matrix) {
-        path = new Path(originalPath);
-
-        path.transform(matrix);
-        isScaled = true;
+        scaleMatrix = matrix;
 
         trimPath();
     }
 
     public void trimPath() {
-        if (isScaled) {
-            PathMeasure pathMeasure = new PathMeasure(path, false);
-            float length = pathMeasure.getLength();
-            trimmedPath = new Path();
-            pathMeasure.getSegment((trimPathStart + trimPathOffset) * length, (trimPathEnd + trimPathOffset) * length, trimmedPath, true);
+        if (scaleMatrix != null) {
+            if (trimPathStart == 0 && trimPathEnd == 1 && trimPathOffset == 0) {
+                path = new Path(originalPath);
+                path.transform(scaleMatrix);
+            } else {
+                PathMeasure pathMeasure = new PathMeasure(originalPath, false);
+                float length = pathMeasure.getLength();
+                trimmedPath = new Path();
+                pathMeasure.getSegment((trimPathStart + trimPathOffset) * length, (trimPathEnd + trimPathOffset) * length, trimmedPath, true);
+                path = new Path(trimmedPath);
+                path.transform(scaleMatrix);
+            }
         }
     }
 

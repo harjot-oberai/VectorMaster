@@ -1,10 +1,8 @@
 package com.sdsmdg.harjot.vectormasterdemo;
 
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.sdsmdg.harjot.vectormaster.models.GroupModel;
@@ -15,7 +13,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-    VectorMasterView vectorMasterView;
+    VectorMasterView lightningView;
     GroupModel groupModel;
     PathModel cloudModel, lightningModel;
 
@@ -27,10 +25,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        vectorMasterView = (VectorMasterView) findViewById(R.id.vector_master);
+        lightningView = (VectorMasterView) findViewById(R.id.vector_master_100);
+        animateLightning();
 
-        cloudModel = vectorMasterView.getPathModelByName("cloud");
-        lightningModel = vectorMasterView.getPathModelByName("lightning");
+
+    }
+
+    void animateLightning() {
+        cloudModel = lightningView.getPathModelByName("cloud");
+        cloudModel.setStrokeColor(Color.parseColor("#F1F1F1"));
+        lightningModel = lightningView.getPathModelByName("lightning");
+        lightningModel.setStrokeColor(Color.parseColor("#FFD700"));
         lightningModel.setTrimPathEnd(0.0f);
         lightningModel.setTrimPathStart(0.0f);
 
@@ -39,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (trimEnd < 1) {
-                    trimEnd += 0.05f;
+                    trimEnd += 0.04f;
                 } else if (trimEnd >= 1 && trimStart < 1) {
-                    trimStart += 0.05f;
+                    trimStart += 0.04f;
                 } else if (trimEnd >= 1 && trimStart >= 1) {
                     trimEnd = 0;
                     trimStart = 0;
@@ -51,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        vectorMasterView.update();
+                        lightningView.update();
                     }
                 });
             }
-        }, 1000, 1000 / 60);
-
+        }, 500, 1000 / 60);
     }
+
 }

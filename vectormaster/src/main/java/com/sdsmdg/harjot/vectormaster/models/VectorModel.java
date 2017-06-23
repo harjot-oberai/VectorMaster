@@ -50,11 +50,11 @@ public class VectorModel {
         for (PathModel pathModel : pathModels) {
             if (pathModel.isFillAndStroke()) {
                 pathModel.makeFillPaint();
-                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
                 pathModel.makeStrokePaint();
-                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
             } else {
-                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
             }
         }
     }
