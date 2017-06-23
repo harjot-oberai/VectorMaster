@@ -149,6 +149,15 @@ public class VectorMasterView extends View {
                             tempPosition = getAttrPosition(xpp, "strokeWidth");
                             pathModel.setStrokeWidth((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_STROKE_WIDTH);
 
+                            tempPosition = getAttrPosition(xpp, "trimPathEnd");
+                            pathModel.setTrimPathEnd((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_TRIM_PATH_END);
+
+                            tempPosition = getAttrPosition(xpp, "trimPathOffset");
+                            pathModel.setTrimPathOffset((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_TRIM_PATH_OFFSET);
+
+                            tempPosition = getAttrPosition(xpp, "trimPathStart");
+                            pathModel.setTrimPathStart((tempPosition != -1) ? Float.parseFloat(xpp.getAttributeValue(tempPosition)) : DefaultValues.PATH_TRIM_PATH_START);
+
                             pathModel.buildPath(useLegacyParser);
                         } else if (name.equals("group")) {
                             groupModel = new GroupModel();

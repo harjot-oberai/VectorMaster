@@ -50,11 +50,11 @@ public class VectorModel {
         for (PathModel pathModel : pathModels) {
             if (pathModel.isFillAndStroke()) {
                 pathModel.makeFillPaint();
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
                 pathModel.makeStrokePaint();
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
             } else {
-                canvas.drawPath(pathModel.getPath(), pathModel.getPathPaint());
+                canvas.drawPath(pathModel.getTrimmedPath(), pathModel.getPathPaint());
             }
         }
     }
@@ -65,7 +65,7 @@ public class VectorModel {
             groupModel.scaleAllPaths(scaleMatrix);
         }
         for (PathModel pathModel : pathModels) {
-            pathModel.getPath().transform(scaleMatrix);
+            pathModel.transform(scaleMatrix);
         }
         for (ClipPathModel clipPathModel : clipPathModels) {
             clipPathModel.getPath().transform(scaleMatrix);
