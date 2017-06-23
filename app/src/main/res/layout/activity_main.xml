@@ -8,47 +8,58 @@
     android:background="#1A1A1A"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/ll"
+        android:textColor="#FFD700"
+        android:textSize="35sp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:paddingStart="20dp"
+        android:paddingBottom="10dp"
+        android:text="Vector Master" />
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:rotation="90"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
             android:scaleX="0.8"
             android:scaleY="0.8"
             app:vector_src="@drawable/ic_cloud_lightning" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master_1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:rotation="90"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
             android:scaleX="0.8"
             android:scaleY="0.8"
             app:vector_src="@drawable/clip_vector" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master_2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:rotation="90"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
             app:vector_src="@drawable/search_back_vector" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master_3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_margin="20dp"
-            android:rotation="90"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
             android:scaleX="0.8"
             android:scaleY="0.8"
             app:vector_src="@drawable/ic_cloud_rain" />

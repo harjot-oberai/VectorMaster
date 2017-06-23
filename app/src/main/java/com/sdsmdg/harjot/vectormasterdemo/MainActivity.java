@@ -1,8 +1,10 @@
 package com.sdsmdg.harjot.vectormasterdemo;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
 import com.sdsmdg.harjot.vectormaster.models.ClipPathModel;
@@ -13,6 +15,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
+
+    Typeface typeface;
+    TextView text;
 
     VectorMasterView lightningView, hourglassView, searchBackView, rainView;
 
@@ -49,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        typeface = Typeface.createFromAsset(getAssets(), "fonts/adequate.ttf");
+        text = (TextView) findViewById(R.id.text);
+        text.setTypeface(typeface);
 
         lightningView = (VectorMasterView) findViewById(R.id.vector_master);
         animateLightning();
