@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A1A"
+    android:background="#FFFFFF"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
     <TextView
@@ -13,14 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/ll"
-        android:textColor="#FFD700"
-        android:textSize="25sp"
         android:gravity="center"
-        android:paddingTop="20dp"
+        android:paddingBottom="10dp"
         android:paddingEnd="20dp"
         android:paddingStart="20dp"
-        android:paddingBottom="10dp"
-        android:text="Vector Master" />
+        android:paddingTop="20dp"
+        android:text="Vector Master"
+        android:textColor="#5D5D5D"
+        android:textSize="25sp" />
 
     <LinearLayout
         android:id="@+id/ll"

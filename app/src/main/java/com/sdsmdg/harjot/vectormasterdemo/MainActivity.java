@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     void animateLightning() {
         PathModel cloudModel = lightningView.getPathModelByName("cloud");
-        cloudModel.setStrokeColor(Color.parseColor("#F1F1F1"));
+        cloudModel.setStrokeColor(Color.parseColor("#5D5D5D"));
         final PathModel lightningModel = lightningView.getPathModelByName("lightning");
         lightningModel.setStrokeColor(Color.parseColor("#FFD700"));
         lightningModel.setTrimPathEnd(0.0f);
