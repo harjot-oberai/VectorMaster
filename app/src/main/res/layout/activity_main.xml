@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#1A1A1A"
     tools:context="com.sdsmdg.harjot.vectormasterdemo.MainActivity">
 
     <LinearLayout
@@ -13,8 +13,7 @@
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master"
@@ -22,6 +21,8 @@
             android:layout_height="100dp"
             android:layout_margin="20dp"
             android:rotation="90"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             app:vector_src="@drawable/ic_cloud_lightning" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
@@ -30,6 +31,8 @@
             android:layout_height="100dp"
             android:layout_margin="20dp"
             android:rotation="90"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             app:vector_src="@drawable/clip_vector" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
@@ -38,7 +41,7 @@
             android:layout_height="100dp"
             android:layout_margin="20dp"
             android:rotation="90"
-            app:vector_src="@drawable/ic_cloud_snow" />
+            app:vector_src="@drawable/search_back_vector" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master_3"
@@ -46,7 +49,9 @@
             android:layout_height="100dp"
             android:layout_margin="20dp"
             android:rotation="90"
-            app:vector_src="@drawable/ic_diamond" />
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            app:vector_src="@drawable/ic_cloud_rain" />
     </LinearLayout>
 
     <com.sdsmdg.harjot.vectormaster.VectorMasterView
@@ -55,6 +60,7 @@
         android:layout_height="150dp"
         android:layout_above="@+id/center"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         app:vector_src="@drawable/ic_cloud_lightning" />
 
 
@@ -69,6 +75,7 @@
         android:layout_height="150dp"
         android:layout_below="@+id/center"
         android:layout_centerInParent="true"
+        android:visibility="gone"
         app:srcCompat="@drawable/ic_cloud_lightning" />
 
 </RelativeLayout>

@@ -1,31 +1,39 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24.0"
-        android:viewportHeight="24.0">
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="24.0"
+    android:viewportWidth="24.0">
     <path
+        android:name="rain_right"
+        android:fillColor="#00000000"
         android:pathData="M16,13L16,21"
+        android:strokeColor="#1E91D6"
         android:strokeLineCap="round"
-        android:strokeColor="#000"
-        android:fillColor="#00000000"
-        android:strokeWidth="2"/>
+        android:strokeWidth="2" />
     <path
+        android:name="rain_left"
+        android:fillColor="#00000000"
         android:pathData="M8,13L8,21"
+        android:strokeColor="#1E91D6"
         android:strokeLineCap="round"
-        android:strokeColor="#000"
-        android:fillColor="#00000000"
-        android:strokeWidth="2"/>
+        android:strokeWidth="2" />
+    <group android:translateY="0">
+        <path
+            android:name="rain_center"
+            android:fillColor="#00000000"
+            android:pathData="M12,15L12,23"
+            android:strokeColor="#1E91D6"
+            android:strokeLineCap="round"
+            android:strokeWidth="2"
+            android:trimPathEnd="0.0"
+            android:trimPathStart="0.0" />
+    </group>
     <path
-        android:pathData="M12,15L12,23"
-        android:strokeLineCap="round"
-        android:strokeColor="#000"
+        android:name="cloud"
         android:fillColor="#00000000"
-        android:strokeWidth="2"/>
-    <path
         android:pathData="M20,16.58A5,5 0,0 0,18 7h-1.26A8,8 0,1 0,4 15.25"
+        android:strokeColor="#F1F1F1"
         android:strokeLineCap="round"
-        android:strokeColor="#000"
-        android:fillColor="#00000000"
-        android:strokeWidth="2"
-        android:strokeLineJoin="round"/>
+        android:strokeLineJoin="round"
+        android:strokeWidth="2" />
 </vector>
