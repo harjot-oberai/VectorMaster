@@ -1,5 +1,29 @@
 apply plugin: 'com.android.library'
 
+ext {
+    bintrayRepo = 'VectorMaster'
+    bintrayName = 'vectormaster'
+
+    publishedGroupId = 'com.sdsmdg.harjot'
+    libraryName = 'VectorMaster'
+    artifact = 'vectormaster'
+
+    libraryDescription = 'Dynamic control over Vector Drawables'
+
+    siteUrl = 'https://github.com/harjot-oberai/VectorMaster/'
+    gitUrl = 'https://github.com/harjot-oberai/VectorMaster/.git'
+
+    libraryVersion = '1.0.0'
+
+    developerId = 'harjot-oberai'
+    developerName = 'Harjot Singh Oberai'
+    developerEmail = 'harjot.oberai@gmail.com'
+
+    licenseName = 'The MIT License'
+    licenseUrl = 'https://opensource.org/licenses/MIT'
+    allLicenses = ["MIT"]
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -23,9 +47,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
     compile 'com.android.support:appcompat-v7:25.3.0'
-    testCompile 'junit:junit:4.12'
 }
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
