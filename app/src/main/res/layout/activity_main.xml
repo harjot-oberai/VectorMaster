@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/ll"
         android:textColor="#FFD700"
-        android:textSize="35sp"
+        android:textSize="25sp"
         android:gravity="center"
         android:paddingTop="20dp"
         android:paddingEnd="20dp"
