@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
@@ -21,6 +22,8 @@ public class PathModel {
 
     private String pathData;
 
+    private float trimPathStart, trimPathEnd, trimPathOffset;
+
     private float strokeAlpha;
     private int strokeColor;
     private Paint.Cap strokeLineCap;
@@ -36,12 +39,18 @@ public class PathModel {
 
     private Path originalPath;
     private Path path;
+    private Path trimmedPath;
     private Paint pathPaint;
+
+    boolean isScaled = false;
 
     public PathModel() {
         fillAlpha = DefaultValues.PATH_FILL_ALPHA;
         fillColor = DefaultValues.PATH_FILL_COLOR;
         fillType = DefaultValues.PATH_FILL_TYPE;
+        trimPathStart = DefaultValues.PATH_TRIM_PATH_START;
+        trimPathEnd = DefaultValues.PATH_TRIM_PATH_END;
+        trimPathOffset = DefaultValues.PATH_TRIM_PATH_OFFSET;
         strokeAlpha = DefaultValues.PATH_STROKE_ALPHA;
         strokeColor = DefaultValues.PATH_STROKE_COLOR;
         strokeLineCap = DefaultValues.PATH_STROKE_LINE_CAP;
@@ -107,6 +116,26 @@ public class PathModel {
         path = new Path(originalPath);
 
         path.transform(matrix);
+        isScaled = true;
+
+        trimPath();
+    }
+
+    public void trimPath() {
+        if (isScaled) {
+            PathMeasure pathMeasure = new PathMeasure(path, false);
+            float length = pathMeasure.getLength();
+            trimmedPath = new Path();
+            pathMeasure.getSegment((trimPathStart + trimPathOffset) * length, (trimPathEnd + trimPathOffset) * length, trimmedPath, true);
+        }
+    }
+
+    public Path getTrimmedPath() {
+        return trimmedPath;
+    }
+
+    public void setTrimmedPath(Path trimmedPath) {
+        this.trimmedPath = trimmedPath;
     }
 
     public Path getPath() {
@@ -167,6 +196,33 @@ public class PathModel {
 
     public void setPathData(String pathData) {
         this.pathData = pathData;
+    }
+
+    public float getTrimPathStart() {
+        return trimPathStart;
+    }
+
+    public void setTrimPathStart(float trimPathStart) {
+        this.trimPathStart = trimPathStart;
+        trimPath();
+    }
+
+    public float getTrimPathEnd() {
+        return trimPathEnd;
+    }
+
+    public void setTrimPathEnd(float trimPathEnd) {
+        this.trimPathEnd = trimPathEnd;
+        trimPath();
+    }
+
+    public float getTrimPathOffset() {
+        return trimPathOffset;
+    }
+
+    public void setTrimPathOffset(float trimPathOffset) {
+        this.trimPathOffset = trimPathOffset;
+        trimPath();
     }
 
     public float getStrokeAlpha() {
