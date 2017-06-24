@@ -68,7 +68,7 @@
 <div align="center"><img src="/screens/clip_path_img_1.png"/></div>
 
 # Flow
-To achieve the desired animation we need to have steps : 
+The desired animation is made up of 4 steps : 
 1. Slide the clip-path down.
 2. Rotate `hourglass_frame` and `fill_outlines` group by 180 degrees.
 3. Slide the clip-path up (since the groups are rotated we need to move the clip-path up).
