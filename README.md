@@ -32,3 +32,172 @@ The working of the library is as follows :
 - If we wish to change any value, we just need to call `model.setParamter(...)`. `model` is of type `VectorModel`, `GroupModel`, `PathModel` or `ClipPathModel`. `parameter` can be anything like **color**, **scale**, **rotation** etc. depending on the model we are using.
 - After setting a paramter the necesarry `paints` and `paths` are rebuilt, scaled, transformed etc.
 - A call to `update` method repaints the canvas with the required changes.
+
+# Examples
+
+#### ic_heart.xml (This is the original vector that has been used in all examples)
+<img src="/screens/ic_heart_original_resized.png" align="right" width="200">
+
+```xml
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24.0"
+        android:viewportHeight="24.0">
+    <path
+        android:name="outline"
+        android:pathData="M20.84,4.61a5.5,5.5 0,0 0,-7.78 0L12,5.67l-1.06,-1.06a5.5,5.5 0,0 0,-7.78 7.78l1.06,1.06L12,21.23l7.78,-7.78 1.06,-1.06a5.5,5.5 0,0 0,0 -7.78z"
+        android:strokeLineCap="round"
+        android:strokeColor="#5D5D5D"
+        android:fillColor="#00000000"
+        android:strokeWidth="2"
+        android:strokeLineJoin="round"/>
+</vector>
+```
+
+## Example 1 (Simple Color change)
+#### XML
+```xml
+<com.sdsmdg.harjot.vectormaster.VectorMasterView
+        android:id="@+id/heart_vector"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:vector_src="@drawable/ic_heart" />
+```
+
+#### Java
+```java
+VectorMasterView heartVector = (VectorMasterView) findViewById(R.id.heart_vector);
+
+// find the correct path using name
+PathModel outline = heartVector.getPathModelByName("outline");
+
+// set the stroke color
+outline.setStrokeColor(Color.parseColor("#ED4337"));
+
+// set the fill color (if fill color is not set or is TRANSPARENT, then no fill is drawn)
+outline.setFillColor(Color.parseColor("#ED4337"));
+```
+
+#### Result
+<div align="center"><img src="/screens/result_1.png" width="500"/></div>
+
+## Example 2 (Trim paths)
+#### XML
+```xml
+<com.sdsmdg.harjot.vectormaster.VectorMasterView
+        android:id="@+id/heart_vector"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:vector_src="@drawable/ic_heart" />
+```
+
+#### Java
+```java
+VectorMasterView heartVector = (VectorMasterView) findViewById(R.id.heart_vector);
+
+// find the correct path using name
+PathModel outline = heartVector.getPathModelByName("outline");
+
+// set trim path start (values are given in fraction of length)
+outline.setTrimPathStart(0.0f);
+
+// set trim path end (values are given in fraction of length)
+outline.setTrimPathEnd(0.65f);
+```
+
+#### Result
+<div align="center"><img src="/screens/result_2.png" width="500"/></div>
+
+## Example 3 (Simple color animation using ValueAnimator)
+#### XML
+```xml
+<com.sdsmdg.harjot.vectormaster.VectorMasterView
+        android:id="@+id/heart_vector"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:vector_src="@drawable/ic_heart" />
+```
+
+#### Java
+```java
+VectorMasterView heartVector = (VectorMasterView) findViewById(R.id.heart_vector);
+
+// find the correct path using name
+PathModel outline = heartVector.getPathModelByName("outline");
+
+outline.setStrokeColor(Color.parseColor("#ED4337"));
+
+heartVector.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+
+    	// initialize valueAnimator and pass start and end color values
+        ValueAnimator valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), Color.WHITE, Color.parseColor("#ED4337"));
+        valueAnimator.setDuration(1000);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+
+            	// set fill color and update view
+                outline.setFillColor((Integer) valueAnimator.getAnimatedValue());
+                heartVector.update();
+            }
+        });
+        valueAnimator.start();
+    }
+});
+```
+
+#### Result
+<div align="center"><img src="/screens/result_3.gif" width="300"/></div>
+
+## Example 4 (Simple trim animation using ValueAnimator)
+#### XML
+```xml
+<com.sdsmdg.harjot.vectormaster.VectorMasterView
+        android:id="@+id/heart_vector"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:vector_src="@drawable/ic_heart" />
+```
+
+#### Java
+```java
+VectorMasterView heartVector = (VectorMasterView) findViewById(R.id.heart_vector);
+
+// find the correct path using name
+PathModel outline = heartVector.getPathModelByName("outline");
+
+outline.setStrokeColor(Color.parseColor("#ED4337"));
+outline.setTrimPathEnd(0.0f);
+
+heartVector.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+
+    	// initialise valueAnimator and pass start and end float values
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
+        valueAnimator.setDuration(1000);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+
+            	// set trim end value and update view
+                outline.setTrimPathEnd((Float) valueAnimator.getAnimatedValue());
+                heartVector.update();
+            }
+        });
+        valueAnimator.start();
+    }
+});
+```
+
+#### Result
+<div align="center"><img src="/screens/result_4.gif" width="300"/></div>
+
+# Complex animations
+The above examples are just the basic use cases and are meant to serve as a quick start to using the library. For more complex animations and use cases involving **clip-paths** and **groups**, head to [Here](abc)<br>
+<div align="center"><img src="/screens/more_animations.gif" width="500"/></div>
