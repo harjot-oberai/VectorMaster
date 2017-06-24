@@ -1,7 +1,7 @@
 <div align="center"><img src="/screens/cover_2.gif" width="600"/></div>
 
 # VectorMaster
-This library introduces dynamic control over vector drawables. Each and every aspect of a vector drawable can be controlled dynamically(via Java instances), using this library. 
+This library introduces dynamic control over vector drawables. Each and every aspect of a vector drawable can be controlled dynamically *(via Java instances)*, using this library. 
 
 Features :
 
@@ -22,7 +22,7 @@ dependencies {
 
 For example, if we need to change vector's properties *(Say, color)* based on a user action *(Say, if user is choosing the theme of app)*. We can achieve this using `AnimatedVectorDrawable` but only to an extent, this approach can't be used if user action leads to an infinite number of cases *(Say, if user picks up a random color for theme)* and we need to change property of the vector for each case. Thus we need a mechanism that can be used to change a vector's properties at runtime using basic methods like `setColor`, `setScale`, `setTranslation` etc. This is where this library comes in.
 
-The working of the library is as follows :
+**The library works as follows :**
 - First the `vector.xml`*(the `VectorDrawable` that we wish to control)*, is parsed using `XmlPullParser` and the attributes are stored in Models corresponding to the tag.
 - `vector` attributes are stored in `VectorModel`, `group` attributes in `GroupModel`, `path` atrributes in `PathModel` and `clip-path` attributes in `ClipPathModel`. The hierarchy is as follows :<br><br><div align="center"><img src="/screens/Hierarchy.png" width="600"/></div><br>
 - The `pathData` in `PathModel` is then parsed using `PathParser.java`; It parses the string data and converts it into a `Path` object.
