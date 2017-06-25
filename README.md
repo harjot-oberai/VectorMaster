@@ -1,6 +1,11 @@
 <div align="center"><img src="/screens/cover_2.gif" width="600"/></div>
 
 # VectorMaster
+# MaterialShadows
+[![Platform](https://img.shields.io/badge/platform-Android-yellow.svg)](https://www.android.com)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 This library introduces dynamic control over vector drawables. Each and every aspect of a vector drawable can be controlled dynamically *(via Java instances)*, using this library. 
 
 Features :
