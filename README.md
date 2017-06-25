@@ -202,5 +202,10 @@ heartVector.setOnClickListener(new View.OnClickListener() {
 The above examples are just the basic use cases and are meant to serve as a quick start to using the library. For more complex animations and use cases involving **clip-paths** and **groups**, head to [AnimationExamples](AnimationExamples)<br>
 <div align="center"><img src="/screens/more_animations.gif" width="500"/></div>
 
+# Limitations
+1. The `PathParser.java` has been extracted from Android source code of version 5.1.1. After this version all the parsing code was shifted to native for efficiency. I have incorporated some of the changes from the natove code into the `PathParser.java`, but still sometimes parsing errors occurs. I have also included a 3rd party parser from [Android-Image-Shape](https://github.com/sathishmscict/Android-Image-Shape/blob/master/library/src/main/java/com/github/siyamed/shapeimageview/path/parser/PathParser.java). To use this parser instead of the default one, set `use_legacy_parser="false"`. This may help in certain situations but not always. If you find any vector that is not being drawn properly, please file an issue and include the vector.
+2. Path morphing is not supported as of now. I would like to support path morphing between incompatible vectors as well (using techniques mentioned [here](https://github.com/alexjlockwood/ShapeShifter#how-does-it-work) by [Alex Lockwood](https://github.com/alexjlockwood)).
+3. Vector tints are not supported.
+
 # License
 <b>VectorMaster</b> is licensed under `MIT license`. View [license](LICENSE.md).
