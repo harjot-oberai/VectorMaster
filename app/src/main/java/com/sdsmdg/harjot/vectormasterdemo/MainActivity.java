@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     float arrowHeadTopTrimEnd = 0;
     float arrowHeadBottomTrimEnd = 0;
 
-    int searchbackState = 0;
+    int searchBackState = 0;
     int count = 60;
 
     float rainTrimStart_C = 0;
@@ -113,9 +114,7 @@ public class MainActivity extends AppCompatActivity {
         final GroupModel frame = hourglassView.getGroupModelByName("hourglass_frame");
         final GroupModel fillOutlines = hourglassView.getGroupModelByName("fill_outlines");
         final GroupModel fillOutlinesPivot = hourglassView.getGroupModelByName("fill_outlines_pivot");
-        final GroupModel group_1_3 = hourglassView.getGroupModelByName("group_1_3");
-
-        ClipPathModel mask = hourglassView.getClipPathModelByName("mask_1");
+        final GroupModel group_fill_path = hourglassView.getGroupModelByName("group_fill_path");
 
         state = 0;
         translationY = -24;
@@ -127,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 if (state == 0) {
                     translationY += 0.3f;
                     fillOutlinesPivot.setTranslateY(translationY);
-                    group_1_3.setTranslateY(-1 * translationY);
+                    group_fill_path.setTranslateY(-1 * translationY);
                     if (translationY >= -12) {
                         state = 1;
                     }
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (state == 2) {
                     translationY -= 0.3f;
                     fillOutlinesPivot.setTranslateY(translationY);
-                    group_1_3.setTranslateY(-1 * translationY);
+                    group_fill_path.setTranslateY(-1 * translationY);
                     if (translationY <= -24) {
                         state = 3;
                     }
@@ -177,24 +176,24 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 count++;
                 if (count >= 50) {
-                    if (searchbackState == 0) {
+                    if (searchBackState == 0) {
                         circleTrimEnd -= 1.0f / 20;
                         stemTrimStart += 0.75f / 20;
                         stemTrimEnd += (1 - 0.185f) / 20;
                         arrowHeadBottomTrimEnd += 1.0f / 20;
                         arrowHeadTopTrimEnd += 1.0f / 20;
                         if (circleTrimEnd <= 0) {
-                            searchbackState = 1;
+                            searchBackState = 1;
                             count = 0;
                         }
-                    } else if (searchbackState == 1) {
+                    } else if (searchBackState == 1) {
                         arrowHeadBottomTrimEnd -= 1.0f / 20;
                         arrowHeadTopTrimEnd -= 1.0f / 20;
                         stemTrimStart -= 0.75f / 20;
                         stemTrimEnd -= (1 - 0.185f) / 20;
                         circleTrimEnd += 1.0f / 20;
                         if (circleTrimEnd >= 1) {
-                            searchbackState = 0;
+                            searchBackState = 0;
                             count = 0;
                         }
                     }

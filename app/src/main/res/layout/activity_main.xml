@@ -46,7 +46,7 @@
             android:layout_margin="10dp"
             android:scaleX="0.8"
             android:scaleY="0.8"
-            app:vector_src="@drawable/clip_vector" />
+            app:vector_src="@drawable/hourglass_vector" />
 
         <com.sdsmdg.harjot.vectormaster.VectorMasterView
             android:id="@+id/vector_master_2"
@@ -64,29 +64,5 @@
             android:scaleY="0.8"
             app:vector_src="@drawable/ic_cloud_rain" />
     </LinearLayout>
-
-    <com.sdsmdg.harjot.vectormaster.VectorMasterView
-        android:id="@+id/vector_master_100"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_above="@+id/center"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:vector_src="@drawable/ic_cloud_lightning" />
-
-
-    <View
-        android:id="@+id/center"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true" />
-
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_below="@+id/center"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        app:srcCompat="@drawable/ic_cloud_lightning" />
 
 </RelativeLayout>
