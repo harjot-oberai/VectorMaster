@@ -201,3 +201,6 @@ heartVector.setOnClickListener(new View.OnClickListener() {
 # Complex animations
 The above examples are just the basic use cases and are meant to serve as a quick start to using the library. For more complex animations and use cases involving **clip-paths** and **groups**, head to [AnimationExamples](AnimationExamples)<br>
 <div align="center"><img src="/screens/more_animations.gif" width="500"/></div>
+
+# License
+<b>VectorMaster</b> is licensed under `MIT license`. View [license](LICENSE.md).
