@@ -17,7 +17,7 @@ Features :
 Just add the following dependency in your app's `build.gradle`
 ```groovy
 dependencies {
-      compile 'com.sdsmdg.harjot:vectormaster:1.0.3'
+      compile 'com.sdsmdg.harjot:vectormaster:1.0.5'
 }
 ```
 
@@ -205,6 +205,46 @@ heartVector.setOnClickListener(new View.OnClickListener() {
 # Complex animations
 The above examples are just the basic use cases and are meant to serve as a quick start to using the library. For more complex animations and use cases involving **clip-paths** and **groups**, head to [AnimationExamples](AnimationExamples)<br>
 <div align="center"><img src="/screens/more_animations.gif" width="500"/></div>
+
+# Using as a Custom Drawable
+The library also provide custom drawable implementation in form of `VecotrMasterDrawable`. It provides the same control over the vector, but allows the user to use the drawable as per its wish, for e.g. as a `Compound Drawable` in `TextView`, or as the source drawable in `ImageView`; basically any use case that involves a `Drawable` can be replaced by `VectorMasterDrawable`.
+
+## Example
+#### XML
+```xml
+<TextView
+    android:id="@+id/text_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Heart"
+    android:textSize="30sp" />
+
+<ImageView
+    android:id="@+id/image_view"
+    android:layout_width="75dp"
+    android:layout_height="75dp"/>
+```
+
+#### Java
+```java
+// Instantiate the custom drawable
+VectorMasterDrawable vectorMasterDrawable = new VectorMasterDrawable(this, R.drawable.ic_heart);
+
+// Set top drawable for TextView
+TextView textView = (TextView) findViewById(R.id.text_view);
+textView.setCompoundDrawablesWithIntrinsicBounds(null, vectorMasterDrawable, null, null);
+
+// Set background drawable for ImageView
+ImageView imageView = (ImageView) findViewById(R.id.image_view);
+imageView.setImageDrawable(vectorMasterDrawable);
+
+// Set tht stroke color of the drawable
+PathModel pathModel = vectorMasterDrawable.getPathModelByName("outline");
+pathModel.setStrokeColor(Color.parseColor("#ED4337"));
+```
+
+#### Result
+<div align="center"><img src="/screens/result_5.png" width="600"/></div>
 
 # Limitations
 1. The `PathParser.java` has been extracted from Android source code of version 5.1.1. After this version all the parsing code was shifted to native for efficiency. I have incorporated some of the changes from the native code into the `PathParser.java`, but still sometimes parsing errors occur. I have also included a 3rd party parser from [Android-Image-Shape](https://github.com/sathishmscict/Android-Image-Shape/blob/master/library/src/main/java/com/github/siyamed/shapeimageview/path/parser/PathParser.java). To use this parser instead of the default one, set `use_legacy_parser="false"`. This may help in certain situations but not always. If you find any vector that is not being drawn properly, please file an issue and include the vector.
