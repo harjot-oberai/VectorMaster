@@ -60,6 +60,10 @@ public class Utils {
         return Math.min(255, newValue);
     }
 
+    public static float getAlphaFromInt(int value) {
+        return (((float) value) / 255.0f);
+    }
+
     public static int dpToPx(int dp) {
         return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
     }
