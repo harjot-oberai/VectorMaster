@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -302,6 +303,13 @@ public class VectorMasterView extends View {
 
     void scaleAllStrokes() {
         vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+    }
+
+    public Path getFullPath() {
+        if (vectorModel != null) {
+            return vectorModel.getFullpath();
+        }
+        return null;
     }
 
     public GroupModel getGroupModelByName(String name) {

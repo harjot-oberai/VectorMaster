@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
+import android.graphics.Path;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -318,6 +319,13 @@ public class VectorMasterDrawable extends Drawable {
 
     void scaleAllStrokes() {
         vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+    }
+
+    public Path getFullPath() {
+        if (vectorModel != null) {
+            return vectorModel.getFullpath();
+        }
+        return null;
     }
 
     public GroupModel getGroupModelByName(String name) {
