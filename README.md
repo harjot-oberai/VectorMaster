@@ -17,7 +17,7 @@ Features :
 Just add the following dependency in your app's `build.gradle`
 ```groovy
 dependencies {
-      compile 'com.sdsmdg.harjot:vectormaster:1.0.5'
+      compile 'com.sdsmdg.harjot:vectormaster:1.0.7'
 }
 ```
 
