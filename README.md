@@ -206,6 +206,8 @@ heartVector.setOnClickListener(new View.OnClickListener() {
 The above examples are just the basic use cases and are meant to serve as a quick start to using the library. For more complex animations and use cases involving **clip-paths** and **groups**, head to [AnimationExamples](AnimationExamples)<br>
 <div align="center"><img src="/screens/more_animations.gif" width="500"/></div>
 
+If your animation doesn't involve any `clip-path` or `group`, then you may use [RichPath](https://github.com/tarek360/RichPath) library developed by [tarek360](https://github.com/tarek360). This library is really useful, if you don't want to indulge in too much mathematics or logic.
+
 # Using as a Custom Drawable
 The library also provide custom drawable implementation in form of `VecotrMasterDrawable`. It provides the same control over the vector, but allows the user to use the drawable as per its wish, for e.g. as a `Compound Drawable` in `TextView`, or as the source drawable in `ImageView`; basically any use case that involves a `Drawable` can be replaced by `VectorMasterDrawable`.
 
@@ -250,6 +252,7 @@ pathModel.setStrokeColor(Color.parseColor("#ED4337"));
 1. The `PathParser.java` has been extracted from Android source code of version 5.1.1. After this version all the parsing code was shifted to native for efficiency. I have incorporated some of the changes from the native code into the `PathParser.java`, but still sometimes parsing errors occur. I have also included a 3rd party parser from [Android-Image-Shape](https://github.com/sathishmscict/Android-Image-Shape/blob/master/library/src/main/java/com/github/siyamed/shapeimageview/path/parser/PathParser.java). To use this parser instead of the default one, set `use_legacy_parser="false"`. This may help in certain situations but not always. If you find any vector that is not being drawn properly, please file an issue and include the vector.
 2. Path morphing is not supported as of now. I would like to support path morphing between incompatible vectors as well (using techniques mentioned [here](https://github.com/alexjlockwood/ShapeShifter#how-does-it-work) by [Alex Lockwood](https://github.com/alexjlockwood)).
 3. Vector tints are not supported yet.
+4. This library doesn't have dedicated methods for supporting animations. It just exposes the `paths`, `groups` etc. for the user to use as he wants, thus for making animations a lot of maths and logic is involved. If you want dedicated methods for animations use [RichPath](https://github.com/tarek360/RichPath) library developed by [tarek360](https://github.com/tarek360).
 
 # License
 <b>VectorMaster</b> is licensed under `MIT license`. View [license](LICENSE.md).
