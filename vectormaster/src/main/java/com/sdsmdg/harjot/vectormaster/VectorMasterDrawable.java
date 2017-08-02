@@ -36,9 +36,11 @@ public class VectorMasterDrawable extends Drawable {
 
     String TAG = "VECTOR_MASTER";
 
-    Matrix scaleMatrix;
+    private Matrix scaleMatrix;
 
     int width = -1, height = -1;
+
+    private float scaleRatio, strokeRatio;
 
     public VectorMasterDrawable(Context context, int resID) {
         this.context = context;
@@ -310,6 +312,8 @@ public class VectorMasterDrawable extends Drawable {
         float heightRatio = height / vectorModel.getViewportHeight();
         float ratio = Math.min(widthRatio, heightRatio);
 
+        scaleRatio = ratio;
+
         scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
     }
 
@@ -318,7 +322,8 @@ public class VectorMasterDrawable extends Drawable {
     }
 
     void scaleAllStrokes() {
-        vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
+        vectorModel.scaleAllStrokeWidth(strokeRatio);
     }
 
     public Path getFullPath() {
@@ -376,4 +381,15 @@ public class VectorMasterDrawable extends Drawable {
         invalidateSelf();
     }
 
+    public float getScaleRatio() {
+        return scaleRatio;
+    }
+
+    public float getStrokeRatio() {
+        return strokeRatio;
+    }
+
+    public Matrix getScaleMatrix() {
+        return scaleMatrix;
+    }
 }

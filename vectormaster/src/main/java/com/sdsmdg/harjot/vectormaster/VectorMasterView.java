@@ -34,9 +34,11 @@ public class VectorMasterView extends View {
 
     String TAG = "VECTOR_MASTER";
 
-    Matrix scaleMatrix;
+    private Matrix scaleMatrix;
 
     int width = 0, height = 0;
+
+    private float scaleRatio, strokeRatio;
 
     public VectorMasterView(Context context) {
         super(context);
@@ -294,6 +296,8 @@ public class VectorMasterView extends View {
         float heightRatio = height / vectorModel.getViewportHeight();
         float ratio = Math.min(widthRatio, heightRatio);
 
+        scaleRatio = ratio;
+
         scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
     }
 
@@ -302,7 +306,8 @@ public class VectorMasterView extends View {
     }
 
     void scaleAllStrokes() {
-        vectorModel.scaleAllStrokeWidth(Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight()));
+        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
+        vectorModel.scaleAllStrokeWidth(strokeRatio);
     }
 
     public Path getFullPath() {
@@ -360,4 +365,15 @@ public class VectorMasterView extends View {
         invalidate();
     }
 
+    public float getScaleRatio() {
+        return scaleRatio;
+    }
+
+    public float getStrokeRatio() {
+        return strokeRatio;
+    }
+
+    public Matrix getScaleMatrix() {
+        return scaleMatrix;
+    }
 }
