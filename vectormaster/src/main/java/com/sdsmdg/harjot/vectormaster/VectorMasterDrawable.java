@@ -42,6 +42,9 @@ public class VectorMasterDrawable extends Drawable {
 
     private float scaleRatio, strokeRatio;
 
+    private int left = 0, top = 0;
+    private int tempSaveCount;
+
     public VectorMasterDrawable(Context context, int resID) {
         this.context = context;
         this.resID = resID;
@@ -250,6 +253,10 @@ public class VectorMasterDrawable extends Drawable {
         super.onBoundsChange(bounds);
 
         if (bounds.width() != 0 && bounds.height() != 0) {
+
+            left = bounds.left;
+            top = bounds.top;
+
             width = bounds.width();
             height = bounds.height();
 
@@ -266,7 +273,7 @@ public class VectorMasterDrawable extends Drawable {
             return;
         }
 
-        if (scaleMatrix == null || width != canvas.getWidth() || height != canvas.getHeight()) {
+        if (scaleMatrix == null) {
             int temp1 = Utils.dpToPx((int) vectorModel.getWidth());
             int temp2 = Utils.dpToPx((int) vectorModel.getHeight());
 
@@ -274,7 +281,15 @@ public class VectorMasterDrawable extends Drawable {
         }
 
         setAlpha(Utils.getAlphaFromFloat(vectorModel.getAlpha()));
-        vectorModel.drawPaths(canvas);
+
+        if (left != 0 || top != 0) {
+            tempSaveCount = canvas.save();
+            canvas.translate(left, top);
+            vectorModel.drawPaths(canvas);
+            canvas.restoreToCount(tempSaveCount);
+        } else {
+            vectorModel.drawPaths(canvas);
+        }
 
     }
 
