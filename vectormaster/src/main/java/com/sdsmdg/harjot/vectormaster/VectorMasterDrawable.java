@@ -25,20 +25,23 @@ import java.util.Stack;
 
 public class VectorMasterDrawable extends Drawable {
 
-    VectorModel vectorModel;
-    Context context;
+    private VectorModel vectorModel;
+    private Context context;
 
-    Resources resources;
-    int resID = -1;
-    boolean useLegacyParser = true;
+    private Resources resources;
+    private int resID = -1;
+    private boolean useLegacyParser = true;
 
-    XmlPullParser xpp;
+    private float offsetX = 0.0f, offsetY = 0.0f;
+    private float scaleX = 1.0f, scaleY = 1.0f;
+
+    private XmlPullParser xpp;
 
     String TAG = "VECTOR_MASTER";
 
     private Matrix scaleMatrix;
 
-    int width = -1, height = -1;
+    private int width = -1, height = -1;
 
     private float scaleRatio, strokeRatio;
 
@@ -51,12 +54,30 @@ public class VectorMasterDrawable extends Drawable {
         init();
     }
 
-    void init() {
+    public VectorMasterDrawable(Context context, int resID, float offsetX, float offsetY) {
+        this.context = context;
+        this.resID = resID;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        init();
+    }
+
+    public VectorMasterDrawable(Context context, int resID, float offsetX, float offsetY, float scaleX, float scaleY) {
+        this.context = context;
+        this.resID = resID;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        init();
+    }
+
+    private void init() {
         resources = context.getResources();
         buildVectorModel();
     }
 
-    void buildVectorModel() {
+    private void buildVectorModel() {
 
         if (resID == -1) {
             vectorModel = null;
@@ -219,7 +240,7 @@ public class VectorMasterDrawable extends Drawable {
 
     }
 
-    int getAttrPosition(XmlPullParser xpp, String attrName) {
+    private int getAttrPosition(XmlPullParser xpp, String attrName) {
         for (int i = 0; i < xpp.getAttributeCount(); i++) {
             if (xpp.getAttributeName(i).equals(attrName)) {
                 return i;
@@ -285,10 +306,10 @@ public class VectorMasterDrawable extends Drawable {
         if (left != 0 || top != 0) {
             tempSaveCount = canvas.save();
             canvas.translate(left, top);
-            vectorModel.drawPaths(canvas);
+            vectorModel.drawPaths(canvas, offsetX, offsetY, scaleX, scaleY);
             canvas.restoreToCount(tempSaveCount);
         } else {
-            vectorModel.drawPaths(canvas);
+            vectorModel.drawPaths(canvas, offsetX, offsetY, scaleX, scaleY);
         }
 
     }
@@ -318,7 +339,7 @@ public class VectorMasterDrawable extends Drawable {
         return Utils.dpToPx((int) vectorModel.getHeight());
     }
 
-    void buildScaleMatrix() {
+    private void buildScaleMatrix() {
         scaleMatrix = new Matrix();
 
         scaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
@@ -332,11 +353,11 @@ public class VectorMasterDrawable extends Drawable {
         scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
     }
 
-    void scaleAllPaths() {
+    private void scaleAllPaths() {
         vectorModel.scaleAllPaths(scaleMatrix);
     }
 
-    void scaleAllStrokes() {
+    private void scaleAllStrokes() {
         strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
         vectorModel.scaleAllStrokeWidth(strokeRatio);
     }
@@ -406,5 +427,41 @@ public class VectorMasterDrawable extends Drawable {
 
     public Matrix getScaleMatrix() {
         return scaleMatrix;
+    }
+
+    public float getOffsetX() {
+        return offsetX;
+    }
+
+    public void setOffsetX(float offsetX) {
+        this.offsetX = offsetX;
+        invalidateSelf();
+    }
+
+    public float getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetY(float offsetY) {
+        this.offsetY = offsetY;
+        invalidateSelf();
+    }
+
+    public float getScaleX() {
+        return scaleX;
+    }
+
+    public void setScaleX(float scaleX) {
+        this.scaleX = scaleX;
+        invalidateSelf();
+    }
+
+    public float getScaleY() {
+        return scaleY;
+    }
+
+    public void setScaleY(float scaleY) {
+        this.scaleY = scaleY;
+        invalidateSelf();
     }
 }

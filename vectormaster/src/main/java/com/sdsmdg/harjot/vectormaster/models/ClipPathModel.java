@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Xfermode;
+import android.graphics.RectF;
 
 import com.sdsmdg.harjot.vectormaster.utilities.parser.PathParser;
 
@@ -74,4 +74,20 @@ public class ClipPathModel {
     public void setPath(Path path) {
         this.path = path;
     }
+
+    public Path getScaledAndOffsetPath(float offsetX, float offsetY, float scaleX, float scaleY) {
+        Path newPath = new Path(path);
+        newPath.offset(offsetX, offsetY);
+        newPath.transform(getScaleMatrix(newPath, scaleX, scaleY));
+        return newPath;
+    }
+
+    public Matrix getScaleMatrix(Path srcPath, float scaleX, float scaleY) {
+        Matrix scaleMatrix = new Matrix();
+        RectF rectF = new RectF();
+        srcPath.computeBounds(rectF, true);
+        scaleMatrix.setScale(scaleX, scaleY, rectF.left, rectF.top);
+        return scaleMatrix;
+    }
+
 }

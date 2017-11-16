@@ -40,6 +40,25 @@ public class VectorModel {
         fullpath = new Path();
     }
 
+    public void drawPaths(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+        for (ClipPathModel clipPathModel : clipPathModels) {
+            canvas.clipPath(clipPathModel.getScaledAndOffsetPath(offsetX, offsetY, scaleX, scaleY));
+        }
+        for (GroupModel groupModel : groupModels) {
+            groupModel.drawPaths(canvas, offsetX, offsetY, scaleX, scaleY);
+        }
+        for (PathModel pathModel : pathModels) {
+            if (pathModel.isFillAndStroke()) {
+                pathModel.makeFillPaint();
+                canvas.drawPath(pathModel.getScaledAndOffsetPath(offsetX, offsetY, scaleX, scaleY), pathModel.getPathPaint());
+                pathModel.makeStrokePaint();
+                canvas.drawPath(pathModel.getScaledAndOffsetPath(offsetX, offsetY, scaleX, scaleY), pathModel.getPathPaint());
+            } else {
+                canvas.drawPath(pathModel.getScaledAndOffsetPath(offsetX, offsetY, scaleX, scaleY), pathModel.getPathPaint());
+            }
+        }
+    }
+
     public void drawPaths(Canvas canvas) {
         for (ClipPathModel clipPathModel : clipPathModels) {
             canvas.clipPath(clipPathModel.getPath());

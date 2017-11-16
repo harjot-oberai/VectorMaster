@@ -5,6 +5,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
+import android.graphics.RectF;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.VectorMasterView;
@@ -148,6 +149,21 @@ public class PathModel {
 
     public void setPath(Path path) {
         this.path = path;
+    }
+
+    public Path getScaledAndOffsetPath(float offsetX, float offsetY, float scaleX, float scaleY) {
+        Path newPath = new Path(path);
+        newPath.offset(offsetX, offsetY);
+        newPath.transform(getScaleMatrix(newPath, scaleX, scaleY));
+        return newPath;
+    }
+
+    public Matrix getScaleMatrix(Path srcPath, float scaleX, float scaleY) {
+        Matrix scaleMatrix = new Matrix();
+        RectF rectF = new RectF();
+        srcPath.computeBounds(rectF, true);
+        scaleMatrix.setScale(scaleX, scaleY, rectF.left, rectF.top);
+        return scaleMatrix;
     }
 
     public Paint getPathPaint() {
