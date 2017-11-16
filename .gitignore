@@ -49,3 +49,6 @@ google-services.json
 
 ### Android Patch ###
 gen-external-apklibs
+
+# Custom Testing Files
+CustomView.java
