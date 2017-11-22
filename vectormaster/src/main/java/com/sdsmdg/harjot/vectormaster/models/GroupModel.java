@@ -128,7 +128,7 @@ public class GroupModel {
     public GroupModel getGroupModelByName(String name) {
         GroupModel grpModel = null;
         for (GroupModel groupModel : groupModels) {
-            if (groupModel.getName().equals(name)) {
+            if (groupModel.getName() != null && groupModel.getName().equals(name)) {
                 grpModel = groupModel;
                 return grpModel;
             } else {
