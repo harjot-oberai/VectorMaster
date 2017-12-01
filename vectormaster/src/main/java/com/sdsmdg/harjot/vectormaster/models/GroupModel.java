@@ -143,7 +143,7 @@ public class GroupModel {
     public PathModel getPathModelByName(String name) {
         PathModel pModel = null;
         for (PathModel pathModel : pathModels) {
-            if (groupModel.getName() != null && pathModel.getName().equals(name)) {
+            if (pathModel.getName() != null && pathModel.getName().equals(name)) {
                 return pathModel;
             }
         }
@@ -158,7 +158,7 @@ public class GroupModel {
     public ClipPathModel getClipPathModelByName(String name) {
         ClipPathModel cModel = null;
         for (ClipPathModel clipPathModel : getClipPathModels()) {
-            if (groupModel.getName() != null && clipPathModel.getName().equals(name)) {
+            if (clipPathModel.getName() != null && clipPathModel.getName().equals(name)) {
                 return clipPathModel;
             }
         }
