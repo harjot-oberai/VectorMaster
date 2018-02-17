@@ -79,4 +79,8 @@ public class Utils {
             return Float.parseFloat(value.substring(0, value.length() - 2));
     }
 
+    public static boolean isEqual(Object a, Object b) {
+        return a == null && b == null || !(a == null || b == null) && a.equals(b);
+    }
+
 }

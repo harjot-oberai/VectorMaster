@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
+import com.sdsmdg.harjot.vectormaster.utilities.Utils;
 
 import java.util.ArrayList;
 
@@ -128,7 +129,7 @@ public class GroupModel {
     public GroupModel getGroupModelByName(String name) {
         GroupModel grpModel = null;
         for (GroupModel groupModel : groupModels) {
-            if (groupModel.getName().equals(name)) {
+            if (Utils.isEqual(groupModel.getName(), name)) {
                 grpModel = groupModel;
                 return grpModel;
             } else {
@@ -143,13 +144,13 @@ public class GroupModel {
     public PathModel getPathModelByName(String name) {
         PathModel pModel = null;
         for (PathModel pathModel : pathModels) {
-            if (pathModel.getName().equals(name)) {
+            if (Utils.isEqual(pathModel.getName(), name)) {
                 return pathModel;
             }
         }
         for (GroupModel groupModel : groupModels) {
             pModel = groupModel.getPathModelByName(name);
-            if (pModel != null && pModel.getName().equals(name))
+            if (pModel != null && Utils.isEqual(pModel.getName(), name))
                 return pModel;
         }
         return pModel;
@@ -158,13 +159,13 @@ public class GroupModel {
     public ClipPathModel getClipPathModelByName(String name) {
         ClipPathModel cModel = null;
         for (ClipPathModel clipPathModel : getClipPathModels()) {
-            if (clipPathModel.getName().equals(name)) {
+            if (Utils.isEqual(clipPathModel.getName(), name)) {
                 return clipPathModel;
             }
         }
         for (GroupModel groupModel : getGroupModels()) {
             cModel = groupModel.getClipPathModelByName(name);
-            if (cModel != null && cModel.getName().equals(name))
+            if (cModel != null && Utils.isEqual(cModel.getName(), name))
                 return cModel;
         }
         return cModel;

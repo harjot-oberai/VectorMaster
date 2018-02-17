@@ -320,7 +320,7 @@ public class VectorMasterView extends View {
     public GroupModel getGroupModelByName(String name) {
         GroupModel gModel;
         for (GroupModel groupModel : vectorModel.getGroupModels()) {
-            if (groupModel.getName().equals(name)) {
+            if (Utils.isEqual(groupModel.getName(), name)) {
                 return groupModel;
             } else {
                 gModel = groupModel.getGroupModelByName(name);
@@ -334,13 +334,13 @@ public class VectorMasterView extends View {
     public PathModel getPathModelByName(String name) {
         PathModel pModel = null;
         for (PathModel pathModel : vectorModel.getPathModels()) {
-            if (pathModel.getName().equals(name)) {
+            if (Utils.isEqual(pathModel.getName(), name)) {
                 return pathModel;
             }
         }
         for (GroupModel groupModel : vectorModel.getGroupModels()) {
             pModel = groupModel.getPathModelByName(name);
-            if (pModel != null && pModel.getName().equals(name))
+            if (pModel != null && Utils.isEqual(pModel.getName(), name))
                 return pModel;
         }
         return pModel;
@@ -349,13 +349,13 @@ public class VectorMasterView extends View {
     public ClipPathModel getClipPathModelByName(String name) {
         ClipPathModel cModel = null;
         for (ClipPathModel clipPathModel : vectorModel.getClipPathModels()) {
-            if (clipPathModel.getName().equals(name)) {
+            if (Utils.isEqual(clipPathModel.getName(), name)) {
                 return clipPathModel;
             }
         }
         for (GroupModel groupModel : vectorModel.getGroupModels()) {
             cModel = groupModel.getClipPathModelByName(name);
-            if (cModel != null && cModel.getName().equals(name))
+            if (cModel != null && Utils.isEqual(cModel.getName(), name))
                 return cModel;
         }
         return cModel;
