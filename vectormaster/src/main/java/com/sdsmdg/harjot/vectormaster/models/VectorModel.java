@@ -87,7 +87,7 @@ public class VectorModel {
             pathModel.transform(scaleMatrix);
         }
         for (ClipPathModel clipPathModel : clipPathModels) {
-            clipPathModel.getPath().transform(scaleMatrix);
+            clipPathModel.transform(scaleMatrix);
         }
     }
 

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="36dp"
+    android:height="72dp"
+    android:viewportWidth="36.0"
+    android:viewportHeight="72.0">
+
+    <path
+        android:name="background"
+        android:pathData="  M6,2 A4,4 0 0 0 2,6
+                            L2,66 A4,4 0 0 0 6,70
+                            L30,70 A4,4 0 0 0 34,66
+                            L34,6 A4,4 0 0 0 30,2"
+        android:strokeLineCap="round"
+        android:fillColor="#222222"
+        android:strokeWidth="0.6"
+        android:strokeLineJoin="round"/>
+
+    <clip-path
+        android:name="mask"
+        android:pathData="  M6,2 A4,4 0 0 0 2,6
+                            L2,66 A4,4 0 0 0 6,70
+                            L30,70 A4,4 0 0 0 34,66
+                            L34,6 A4,4 0 0 0 30,2"
+        android:strokeLineCap="round"
+        android:fillColor="#fff"
+        android:strokeLineJoin="round"/>
+
+    <path
+        android:name="foreground"
+        android:pathData="M18,2 L2,2 L2,70 L34,70 L34,2 Z"
+        android:strokeLineCap="round"
+        android:fillColor="#14a"
+        android:strokeLineJoin="round" />
+</vector>
