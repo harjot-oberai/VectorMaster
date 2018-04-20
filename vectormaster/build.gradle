@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/harjot-oberai/VectorMaster/'
     gitUrl = 'https://github.com/harjot-oberai/VectorMaster/.git'
 
-    libraryVersion = '1.1.2'
+    libraryVersion = '1.1.3'
 
     developerId = 'harjot-oberai'
     developerName = 'Harjot Singh Oberai'
