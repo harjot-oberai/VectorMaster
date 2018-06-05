@@ -209,7 +209,7 @@ The above examples are just the basic use cases and are meant to serve as a quic
 If your animation doesn't involve any `clip-path` or `group`, then you may use [RichPath](https://github.com/tarek360/RichPath) library developed by [tarek360](https://github.com/tarek360). This library is really useful, if you don't want to indulge in too much mathematics or logic.
 
 # Using as a Custom Drawable
-The library also provide custom drawable implementation in form of `VecotrMasterDrawable`. It provides the same control over the vector, but allows the user to use the drawable as per its wish, for e.g. as a `Compound Drawable` in `TextView`, or as the source drawable in `ImageView`; basically any use case that involves a `Drawable` can be replaced by `VectorMasterDrawable`.
+The library also provide custom drawable implementation in form of `VectorMasterDrawable`. It provides the same control over the vector, but allows the user to use the drawable as per its wish, for e.g. as a `Compound Drawable` in `TextView`, or as the source drawable in `ImageView`; basically any use case that involves a `Drawable` can be replaced by `VectorMasterDrawable`.
 
 ## Example
 #### XML
