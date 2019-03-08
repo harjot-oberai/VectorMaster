@@ -1,17 +1,13 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
-
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.RectF;
 
-import com.sdsmdg.harjot.vectormaster.utilities.parser.PathParser;
-
-public class ClipPathModel {
-    private String name;
+public class ClipPathModel extends Model {
     private String pathData;
 
     private Path originalPath;
@@ -27,20 +23,31 @@ public class ClipPathModel {
         clipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
-    public void buildPath(boolean useLegacyParser) {
-        if (useLegacyParser) {
-            originalPath = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
-        } else {
-            originalPath = PathParser.doPath(pathData);
-        }
+    @Override
+    public void prepare(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+        canvas.clipPath(getScaledAndOffsetPath(path, offsetX, offsetY, scaleX, scaleY));
+    }
 
+    @Override
+    public void draw(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+        //clip path does no drawing
+    }
+
+    @Override
+    public void calculateStatic() {
+        originalPath = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
         path = new Path(originalPath);
     }
 
-    public void transform(Matrix matrix) {
-        path = new Path(originalPath);
+    @Override
+    public void scaleStrokeWidth(float ratio) {
 
-        path.transform(matrix);
+    }
+
+    @Override
+    public void scalePaths(Matrix originalScaleMatrix, Matrix concatTransformMatrix) {
+        path = new Path(originalPath);
+        path.transform(concatTransformMatrix);
     }
 
     public Paint getClipPaint() {
@@ -49,14 +56,6 @@ public class ClipPathModel {
 
     public void setClipPaint(Paint clipPaint) {
         this.clipPaint = clipPaint;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPathData() {
@@ -75,19 +74,6 @@ public class ClipPathModel {
         this.path = path;
     }
 
-    public Path getScaledAndOffsetPath(float offsetX, float offsetY, float scaleX, float scaleY) {
-        Path newPath = new Path(path);
-        newPath.offset(offsetX, offsetY);
-        newPath.transform(getScaleMatrix(newPath, scaleX, scaleY));
-        return newPath;
-    }
 
-    public Matrix getScaleMatrix(Path srcPath, float scaleX, float scaleY) {
-        Matrix scaleMatrix = new Matrix();
-        RectF rectF = new RectF();
-        srcPath.computeBounds(rectF, true);
-        scaleMatrix.setScale(scaleX, scaleY, rectF.left, rectF.top);
-        return scaleMatrix;
-    }
 
 }
