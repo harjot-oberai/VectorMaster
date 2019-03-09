@@ -24,11 +24,6 @@ public class ClipPathModel extends Model {
     }
 
     @Override
-    public void init() {
-       preparePath(new Matrix());
-    }
-
-    @Override
     public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
         canvas.clipPath(preparePath(parentTransformation));
     }

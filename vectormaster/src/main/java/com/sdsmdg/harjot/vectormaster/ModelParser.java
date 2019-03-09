@@ -205,7 +205,7 @@ public class ModelParser {
             ParentModel topGroupModel = parentModelStack.pop();
             parentModelStack.peek().addChild(topGroupModel);
           } else if (name.equals("vector")) {
-            vectorModel.init();
+            //we are done with parsing
           }
           break;
         }

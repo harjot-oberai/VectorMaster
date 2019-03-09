@@ -12,6 +12,9 @@ public class GroupModel extends ParentModel {
   private float scaleX, scaleY;
   private float translateX, translateY;
   private Matrix ownTransformation;
+  private boolean ownTransformationChanged = true;
+  private Matrix lastParentTransformation;
+  private Matrix lastTransformation;
 
   public GroupModel() {
     rotation = DefaultValues.GROUP_ROTATION;
@@ -26,10 +29,15 @@ public class GroupModel extends ParentModel {
   @Override
   public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
 
-    Matrix transformation = new Matrix(parentTransformation);
-    transformation.preConcat(ownTransformation);
+    //try to keep transformed matrix the same instance as long as the values do not change
+    if (ownTransformationChanged || lastParentTransformation != parentTransformation) {
+      lastParentTransformation = parentTransformation;
+      lastTransformation = new Matrix(parentTransformation);
+      lastTransformation.preConcat(ownTransformation);
+      ownTransformationChanged = false;
+    }
 
-    super.draw(canvas, transformation, strokeRatio);
+    super.draw(canvas, lastTransformation, strokeRatio);
   }
 
   protected void createOwnTransformation() {
@@ -39,6 +47,7 @@ public class GroupModel extends ParentModel {
     transformation.postTranslate(translateX, translateY);
 
     ownTransformation = transformation;
+    ownTransformationChanged = true;
   }
 
   private void markAsDirty() {

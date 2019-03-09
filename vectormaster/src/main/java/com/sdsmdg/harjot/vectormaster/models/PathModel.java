@@ -67,7 +67,13 @@ public class PathModel extends Model {
 
   @Override
   public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-    Path pathToDraw = preparePath(parentTransformation);
+    //try caching as much as possible to do path calculation only if necessary
+    if (transformedPath == null || lastTransformation == null || !lastTransformation.equals(parentTransformation)) {
+      transformedPath = transform(trimmedPath, parentTransformation);
+      lastTransformation = parentTransformation;
+    }
+    transformedPath.setFillType(fillType);
+    Path pathToDraw = transformedPath;
     pathPaint.setStrokeWidth(strokeWidth * this.strokeRatio * strokeRatio);
     if (isFillAndStroke()) {
       makeFillPaint();
@@ -77,11 +83,6 @@ public class PathModel extends Model {
     } else {
       canvas.drawPath(pathToDraw, getPathPaint());
     }
-  }
-
-  @Override
-  public void init() {
-    preparePath(new Matrix());
   }
 
   public void updatePaint() {
@@ -118,45 +119,30 @@ public class PathModel extends Model {
     pathPaint.setStyle(Paint.Style.FILL);
   }
 
-  private Path preparePath(Matrix transformation) {
-    //try caching as much as possible to do path calculation only if necessary
-    if (path == null) {
-      path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
-      trimmedPath = null;
-    }
-    if (trimmedPath == null) {
-      trimmedPath = trimPath(path);
-      transformedPath = null;
-    }
-    if (transformedPath == null || lastTransformation == null || !lastTransformation.equals(transformation)) {
-      transformedPath = transform(trimmedPath, transformation);
-    }
-    transformedPath.setFillType(fillType);
-    return transformedPath;
-  }
+  public void trimPath() {
+      if (path == null) {
+        return;
+      }
 
-  public Path trimPath(Path path) {
       if (trimPathStart == 0 && trimPathEnd == 1 && trimPathOffset == 0) {
-        return new Path(path);
+        trimmedPath = new Path(path);
+        transformedPath = null;
       } else {
         PathMeasure pathMeasure = new PathMeasure(path, false);
         float length = pathMeasure.getLength();
-        Path trimmedPath = new Path();
+        Path trimmed = new Path();
         pathMeasure.getSegment(
             (trimPathStart + trimPathOffset) * length,
             (trimPathEnd + trimPathOffset) * length,
-            trimmedPath,
+            trimmed,
             true);
-        return trimmedPath;
+        trimmedPath = trimmed;
+        transformedPath = null;
       }
   }
 
   public Path getTrimmedPath() {
     return trimmedPath;
-  }
-
-  public void setTrimmedPath(Path trimmedPath) {
-    this.trimmedPath = trimmedPath;
   }
 
   public Path getPath() {
@@ -165,7 +151,7 @@ public class PathModel extends Model {
 
   public void setPath(Path path) {
     this.path = path;
-    this.trimmedPath = null;
+    trimPath();
   }
 
   public Paint getPathPaint() {
@@ -208,7 +194,8 @@ public class PathModel extends Model {
 
   public void setPathData(String pathData) {
     this.pathData = pathData;
-    this.path = null;
+    this.path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    trimPath();
   }
 
   public float getTrimPathStart() {
@@ -217,7 +204,7 @@ public class PathModel extends Model {
 
   public void setTrimPathStart(float trimPathStart) {
     this.trimPathStart = trimPathStart;
-    this.trimmedPath = null;
+    trimPath();
   }
 
   public float getTrimPathEnd() {
@@ -226,7 +213,7 @@ public class PathModel extends Model {
 
   public void setTrimPathEnd(float trimPathEnd) {
     this.trimPathEnd = trimPathEnd;
-    this.trimmedPath = null;
+    trimPath();
   }
 
   public float getTrimPathOffset() {
@@ -235,7 +222,7 @@ public class PathModel extends Model {
 
   public void setTrimPathOffset(float trimPathOffset) {
     this.trimPathOffset = trimPathOffset;
-    this.trimmedPath = null;
+    trimPath();
   }
 
   public float getStrokeAlpha() {
@@ -303,6 +290,5 @@ public class PathModel extends Model {
   public void setStrokeRatio(float strokeRatio) {
     this.strokeRatio = strokeRatio;
   }
-
 
 }

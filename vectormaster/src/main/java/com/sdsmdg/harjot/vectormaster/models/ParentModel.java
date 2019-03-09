@@ -19,13 +19,6 @@ public abstract class ParentModel extends Model {
   }
 
   @Override
-  public void init() {
-    for (Model child : getChildren()) {
-      child.init();
-    }
-  }
-
-  @Override
   public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
     //parents by default do not prepare the canvas recursively
   }

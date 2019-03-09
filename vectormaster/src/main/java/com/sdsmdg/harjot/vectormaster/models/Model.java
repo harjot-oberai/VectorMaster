@@ -25,7 +25,6 @@ public abstract class Model {
     this.parent = parent;
   }
 
-  public abstract void init();
   public abstract void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio);
   public abstract void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio);
 
