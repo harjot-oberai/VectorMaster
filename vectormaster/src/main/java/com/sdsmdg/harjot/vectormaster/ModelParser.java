@@ -198,16 +198,14 @@ public class ModelParser {
 
         case XmlPullParser.END_TAG:
           if (name.equals("path")) {
-            pathModel.calculateStatic();
             parentModelStack.peek().addChild(pathModel);
-            vectorModel.getFullpath().addPath(pathModel.getPath());
           } else if (name.equals("clip-path")) {
             parentModelStack.peek().addChild(clipPathModel);
           } else if (name.equals("group")) {
             ParentModel topGroupModel = parentModelStack.pop();
             parentModelStack.peek().addChild(topGroupModel);
           } else if (name.equals("vector")) {
-            vectorModel.calculateStatic();
+            vectorModel.init();
           }
           break;
         }

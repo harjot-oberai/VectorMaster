@@ -34,12 +34,11 @@ public class PathModel extends Model {
 
   // Support for trim-paths is not available
 
-  private Path originalPath;
   private Path path;
   private Path trimmedPath;
+  private Path transformedPath;
+  private Matrix lastTransformation;
   private Paint pathPaint;
-
-  private Matrix scaleMatrix;
 
   public PathModel() {
     fillAlpha = DefaultValues.PATH_FILL_ALPHA;
@@ -62,13 +61,14 @@ public class PathModel extends Model {
   }
 
   @Override
-  public void prepare(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+  public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
     //path do not prepare
   }
 
   @Override
-  public void draw(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
-    Path pathToDraw = getScaledAndOffsetPath(path, offsetX, offsetY, scaleX, scaleY);
+  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
+    Path pathToDraw = preparePath(parentTransformation);
+    pathPaint.setStrokeWidth(strokeWidth * this.strokeRatio * strokeRatio);
     if (isFillAndStroke()) {
       makeFillPaint();
       canvas.drawPath(pathToDraw, getPathPaint());
@@ -79,9 +79,12 @@ public class PathModel extends Model {
     }
   }
 
-  public void updatePaint() {
-    pathPaint.setStrokeWidth(strokeWidth * strokeRatio);
+  @Override
+  public void init() {
+    preparePath(new Matrix());
+  }
 
+  public void updatePaint() {
     if (fillColor != Color.TRANSPARENT && strokeColor != Color.TRANSPARENT) {
       isFillAndStroke = true;
     } else if (fillColor != Color.TRANSPARENT) {
@@ -115,42 +118,37 @@ public class PathModel extends Model {
     pathPaint.setStyle(Paint.Style.FILL);
   }
 
-  @Override
-  public void scalePaths(Matrix originalScaleMatrix, Matrix concatTransformMatrix) {
-    scaleMatrix = concatTransformMatrix;
-    trimPath();
-  }
-
-  @Override
-  public void calculateStatic() {
-    originalPath = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
-    if (originalPath != null) {
-      originalPath.setFillType(fillType);
+  private Path preparePath(Matrix transformation) {
+    //try caching as much as possible to do path calculation only if necessary
+    if (path == null) {
+      path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+      trimmedPath = null;
     }
-    path = new Path(originalPath);
+    if (trimmedPath == null) {
+      trimmedPath = trimPath(path);
+      transformedPath = null;
+    }
+    if (transformedPath == null || lastTransformation == null || !lastTransformation.equals(transformation)) {
+      transformedPath = transform(trimmedPath, transformation);
+    }
+    transformedPath.setFillType(fillType);
+    return transformedPath;
   }
 
-  @Override
-  public void scaleStrokeWidth(float ratio) {
-    setStrokeRatio(ratio);
-  }
-
-  public void trimPath() {
-    if (scaleMatrix != null) {
+  public Path trimPath(Path path) {
       if (trimPathStart == 0 && trimPathEnd == 1 && trimPathOffset == 0) {
-        path = new Path(originalPath);
-        path.transform(scaleMatrix);
+        return new Path(path);
       } else {
-        PathMeasure pathMeasure = new PathMeasure(originalPath, false);
+        PathMeasure pathMeasure = new PathMeasure(path, false);
         float length = pathMeasure.getLength();
-        trimmedPath = new Path();
-        pathMeasure
-            .getSegment((trimPathStart + trimPathOffset) * length, (trimPathEnd + trimPathOffset) * length, trimmedPath,
-                true);
-        path = new Path(trimmedPath);
-        path.transform(scaleMatrix);
+        Path trimmedPath = new Path();
+        pathMeasure.getSegment(
+            (trimPathStart + trimPathOffset) * length,
+            (trimPathEnd + trimPathOffset) * length,
+            trimmedPath,
+            true);
+        return trimmedPath;
       }
-    }
   }
 
   public Path getTrimmedPath() {
@@ -167,6 +165,7 @@ public class PathModel extends Model {
 
   public void setPath(Path path) {
     this.path = path;
+    this.trimmedPath = null;
   }
 
   public Paint getPathPaint() {
@@ -201,8 +200,6 @@ public class PathModel extends Model {
 
   public void setFillType(Path.FillType fillType) {
     this.fillType = fillType;
-    if (originalPath != null)
-      originalPath.setFillType(fillType);
   }
 
   public String getPathData() {
@@ -211,6 +208,7 @@ public class PathModel extends Model {
 
   public void setPathData(String pathData) {
     this.pathData = pathData;
+    this.path = null;
   }
 
   public float getTrimPathStart() {
@@ -219,7 +217,7 @@ public class PathModel extends Model {
 
   public void setTrimPathStart(float trimPathStart) {
     this.trimPathStart = trimPathStart;
-    trimPath();
+    this.trimmedPath = null;
   }
 
   public float getTrimPathEnd() {
@@ -228,7 +226,7 @@ public class PathModel extends Model {
 
   public void setTrimPathEnd(float trimPathEnd) {
     this.trimPathEnd = trimPathEnd;
-    trimPath();
+    this.trimmedPath = null;
   }
 
   public float getTrimPathOffset() {
@@ -237,7 +235,7 @@ public class PathModel extends Model {
 
   public void setTrimPathOffset(float trimPathOffset) {
     this.trimPathOffset = trimPathOffset;
-    trimPath();
+    this.trimmedPath = null;
   }
 
   public float getStrokeAlpha() {
@@ -294,16 +292,17 @@ public class PathModel extends Model {
     updatePaint();
   }
 
+  public boolean isFillAndStroke() {
+    return isFillAndStroke;
+  }
+
   public float getStrokeRatio() {
     return strokeRatio;
   }
 
   public void setStrokeRatio(float strokeRatio) {
     this.strokeRatio = strokeRatio;
-    updatePaint();
   }
 
-  public boolean isFillAndStroke() {
-    return isFillAndStroke;
-  }
+
 }

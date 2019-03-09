@@ -94,8 +94,6 @@ public class VectorMasterView extends View {
             height = h;
 
             buildScaleMatrix();
-            scaleAllPaths();
-            scaleAllStrokes();
         }
     }
 
@@ -110,9 +108,12 @@ public class VectorMasterView extends View {
             return;
         }
 
+        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
+        Matrix translation = new Matrix(scaleMatrix);
+
         setAlpha(vectorModel.getAlpha());
 
-        vectorModel.draw(canvas);
+        vectorModel.draw(canvas, translation, scaleRatio);
 
     }
 
@@ -129,15 +130,6 @@ public class VectorMasterView extends View {
         scaleRatio = ratio;
 
         scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
-    }
-
-    void scaleAllPaths() {
-        vectorModel.scalePaths(scaleMatrix);
-    }
-
-    void scaleAllStrokes() {
-        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
-        vectorModel.scaleStrokeWidth(strokeRatio);
     }
 
     public Path getFullPath() {

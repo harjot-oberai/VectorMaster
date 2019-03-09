@@ -8,8 +8,6 @@ import java.util.ArrayList;
 public abstract class ParentModel extends Model {
 
   private ArrayList<Model> children = new ArrayList<>(0);
-  private Matrix scaleMatrix;
-  private Matrix transformMatrix;
 
   public ArrayList<Model> getChildren() {
     return children;
@@ -20,69 +18,26 @@ public abstract class ParentModel extends Model {
     model.setParent(this);
   }
 
-  public Matrix getTransformMatrix() {
-    return transformMatrix;
-  }
-
-  protected Matrix createTransformMatrix() {
-    return new Matrix();
-  }
-
   @Override
-  public void calculateStatic() {
-    //create own matrix
-    transformMatrix = createTransformMatrix();
-    //add the one from the parrent if there is a parent
-    if (getParent() != null) {
-      transformMatrix.postConcat(getParent().getTransformMatrix());
-    }
-    //tell all children to do the calculation
-    for (Model model : getChildren()) {
-      model.calculateStatic();
+  public void init() {
+    for (Model child : getChildren()) {
+      child.init();
     }
   }
 
   @Override
-  public void scalePaths(Matrix originalScaleMatrix, Matrix concatTransformMatrix) {
-    this.scaleMatrix = originalScaleMatrix;
-    Matrix finalTransformMatrix = new Matrix(getTransformMatrix());
-    finalTransformMatrix.postConcat(scaleMatrix);
-    for (Model child : children) {
-      child.scalePaths(originalScaleMatrix, finalTransformMatrix);
-    }
-  }
-
-  public void scalePaths(Matrix originalScaleMatrix) {
-    scalePaths(originalScaleMatrix, null); //because we are a parentModel only the first Matrix matters the second one is not used.
-  }
-
-  public void updateAndScalePaths() {
-    if (scaleMatrix != null) {
-      calculateStatic();
-      scalePaths(scaleMatrix);
-    }
-  }
-
-  @Override
-  public void scaleStrokeWidth(float ratio) {
-    for (Model model : getChildren()) {
-      model.scaleStrokeWidth(ratio);
-    }
-  }
-
-  @Override
-  public void prepare(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+  public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
     //parents by default do not prepare the canvas recursively
   }
 
   @Override
-  public void draw(Canvas canvas, float offsetX, float offsetY, float scaleX, float scaleY) {
+  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
     //parents prepare just their own children before they draw
     for (Model child : getChildren()) {
-      child.prepare(canvas, offsetX, offsetY, scaleX, scaleY);
+      child.prepare(canvas, parentTransformation, strokeRatio);
     }
     for (Model child : getChildren()) {
-      child.draw(canvas, offsetX, offsetY, scaleX, scaleY);
+      child.draw(canvas, parentTransformation, strokeRatio);
     }
   }
 

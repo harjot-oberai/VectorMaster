@@ -13,16 +13,10 @@ import android.graphics.drawable.Drawable;
 
 import com.sdsmdg.harjot.vectormaster.models.ClipPathModel;
 import com.sdsmdg.harjot.vectormaster.models.GroupModel;
-import com.sdsmdg.harjot.vectormaster.models.ParentModel;
 import com.sdsmdg.harjot.vectormaster.models.PathModel;
 import com.sdsmdg.harjot.vectormaster.models.VectorModel;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
-
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.util.Stack;
 
 public class VectorMasterDrawable extends Drawable {
 
@@ -126,8 +120,6 @@ public class VectorMasterDrawable extends Drawable {
             height = bounds.height();
 
             buildScaleMatrix();
-            scaleAllPaths();
-            scaleAllStrokes();
         }
     }
 
@@ -145,15 +137,20 @@ public class VectorMasterDrawable extends Drawable {
             setBounds(0, 0, temp1, temp2);
         }
 
+        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
+        Matrix translation = new Matrix(scaleMatrix);
+        translation.postTranslate(offsetX, offsetY);
+        translation.postScale(scaleX, scaleY);
+
         setAlpha(Utils.getAlphaFromFloat(vectorModel.getAlpha()));
 
         if (left != 0 || top != 0) {
             tempSaveCount = canvas.save();
             canvas.translate(left, top);
-            vectorModel.draw(canvas, offsetX, offsetY, scaleX, scaleY);
+            vectorModel.draw(canvas, translation, strokeRatio);
             canvas.restoreToCount(tempSaveCount);
         } else {
-            vectorModel.draw(canvas, offsetX, offsetY, scaleX, scaleY);
+            vectorModel.draw(canvas, translation, strokeRatio);
         }
 
     }
@@ -195,15 +192,6 @@ public class VectorMasterDrawable extends Drawable {
         scaleRatio = ratio;
 
         scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
-    }
-
-    private void scaleAllPaths() {
-        vectorModel.scalePaths(scaleMatrix);
-    }
-
-    private void scaleAllStrokes() {
-        strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
-        vectorModel.scaleStrokeWidth(strokeRatio);
     }
 
     public Path getFullPath() {

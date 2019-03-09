@@ -1,93 +1,110 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
+import android.graphics.Canvas;
 import android.graphics.Matrix;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 
 public class GroupModel extends ParentModel {
 
-    private float rotation;
-    private float pivotX, pivotY;
-    private float scaleX, scaleY;
-    private float translateX, translateY;
+  private float rotation;
+  private float pivotX, pivotY;
+  private float scaleX, scaleY;
+  private float translateX, translateY;
+  private Matrix ownTransformation;
 
-    public GroupModel() {
-        rotation = DefaultValues.GROUP_ROTATION;
-        pivotX = DefaultValues.GROUP_PIVOT_X;
-        pivotY = DefaultValues.GROUP_PIVOT_Y;
-        scaleX = DefaultValues.GROUP_SCALE_X;
-        scaleY = DefaultValues.GROUP_SCALE_Y;
-        translateX = DefaultValues.GROUP_TRANSLATE_X;
-        translateY = DefaultValues.GROUP_TRANSLATE_Y;
-    }
+  public GroupModel() {
+    rotation = DefaultValues.GROUP_ROTATION;
+    pivotX = DefaultValues.GROUP_PIVOT_X;
+    pivotY = DefaultValues.GROUP_PIVOT_Y;
+    scaleX = DefaultValues.GROUP_SCALE_X;
+    scaleY = DefaultValues.GROUP_SCALE_Y;
+    translateX = DefaultValues.GROUP_TRANSLATE_X;
+    translateY = DefaultValues.GROUP_TRANSLATE_Y;
+  }
 
-    @Override
-    protected Matrix createTransformMatrix() {
-        Matrix transformMatrix = new Matrix();
-        transformMatrix.postScale(scaleX, scaleY, pivotX, pivotY);
-        transformMatrix.postRotate(rotation, pivotX, pivotY);
-        transformMatrix.postTranslate(translateX, translateY);
-        return transformMatrix;
-    }
+  @Override
+  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
 
-    public float getRotation() {
-        return rotation;
-    }
+    Matrix transformation = new Matrix(parentTransformation);
+    transformation.preConcat(ownTransformation);
 
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
-        updateAndScalePaths();
-    }
+    super.draw(canvas, transformation, strokeRatio);
+  }
 
-    public float getPivotX() {
-        return pivotX;
-    }
+  protected void createOwnTransformation() {
+    Matrix transformation = new Matrix();
+    transformation.postScale(scaleX, scaleY, pivotX, pivotY);
+    transformation.postRotate(rotation, pivotX, pivotY);
+    transformation.postTranslate(translateX, translateY);
 
-    public void setPivotX(float pivotX) {
-        this.pivotX = pivotX;
-    }
+    ownTransformation = transformation;
+  }
 
-    public float getPivotY() {
-        return pivotY;
-    }
+  private void markAsDirty() {
+    createOwnTransformation();
+  }
 
-    public void setPivotY(float pivotY) {
-        this.pivotY = pivotY;
-    }
+  public float getRotation() {
+    return rotation;
+  }
 
-    public float getScaleX() {
-        return scaleX;
-    }
+  public void setRotation(float rotation) {
+    this.rotation = rotation;
+    markAsDirty();
+  }
 
-    public void setScaleX(float scaleX) {
-        this.scaleX = scaleX;
-        updateAndScalePaths();
-    }
+  public float getPivotX() {
+    return pivotX;
+  }
 
-    public float getScaleY() {
-        return scaleY;
-    }
+  public void setPivotX(float pivotX) {
+    this.pivotX = pivotX;
+    markAsDirty();
+  }
 
-    public void setScaleY(float scaleY) {
-        this.scaleY = scaleY;
-        updateAndScalePaths();
-    }
+  public float getPivotY() {
+    return pivotY;
+  }
 
-    public float getTranslateX() {
-        return translateX;
-    }
+  public void setPivotY(float pivotY) {
+    this.pivotY = pivotY;
+    markAsDirty();
+  }
 
-    public void setTranslateX(float translateX) {
-        this.translateX = translateX;
-        updateAndScalePaths();
-    }
+  public float getScaleX() {
+    return scaleX;
+  }
 
-    public float getTranslateY() {
-        return translateY;
-    }
+  public void setScaleX(float scaleX) {
+    this.scaleX = scaleX;
+    markAsDirty();
+  }
 
-    public void setTranslateY(float translateY) {
-        this.translateY = translateY;
-        updateAndScalePaths();
-    }
+  public float getScaleY() {
+    return scaleY;
+  }
+
+  public void setScaleY(float scaleY) {
+    this.scaleY = scaleY;
+    markAsDirty();
+  }
+
+  public float getTranslateX() {
+    return translateX;
+  }
+
+  public void setTranslateX(float translateX) {
+    this.translateX = translateX;
+    markAsDirty();
+  }
+
+  public float getTranslateY() {
+    return translateY;
+  }
+
+  public void setTranslateY(float translateY) {
+    this.translateY = translateY;
+    markAsDirty();
+  }
 }
