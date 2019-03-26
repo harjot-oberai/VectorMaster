@@ -25,12 +25,19 @@ public abstract class Model {
     this.parent = parent;
   }
 
+  /**
+   * The rendering process always calls calculate(), perform(), draw() so that the models recalculate dynamically if needed.
+   * The methods should cache as much as possible and avoid allocation of new objects.
+   * @param parentTransformation
+   * @param transformationChanged
+   * @param strokeRatio
+   */
   public abstract void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio);
   public abstract void prepare(Canvas canvas);
   public abstract void draw(Canvas canvas);
 
   /**
-   * adds the UNTRANSFORMED path to collectedPath
+   * adds the UNTRANSFORMED path (if the model has one) to collectedPath
    * @return
    */
   public void collectFullPath(Path collectedPath) {

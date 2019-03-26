@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 
-import android.util.Log;
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
 
@@ -31,12 +30,7 @@ public class PathModel extends Model {
   private float strokeRatio;
   private boolean strokeChanged;
 
-  private long averageDrawTime = 0L;
-  private int drawCount = 0;
-
   private boolean isFillAndStroke = false;
-
-  // Support for trim-paths is not available
 
   private Path path;
   private PathMeasure pathMeasure;
@@ -146,7 +140,6 @@ public class PathModel extends Model {
       return;
     }
 
-    // long startTime = System.nanoTime();
     if (trimPathStart != 0 || trimPathEnd != 1 || trimPathOffset != 0) {
       float trimStart = trimPathStart + trimPathOffset;
       float trimEnd = trimPathEnd + trimPathOffset;
@@ -160,20 +153,7 @@ public class PathModel extends Model {
     } else {
       trimmedPath.set(path);
     }
-/*
-    long endTime = System.nanoTime();
-    long drawTime = endTime - startTime;
-    if (averageDrawTime == 0) {
-      averageDrawTime = drawTime;
-    } else {
-      averageDrawTime = ((averageDrawTime + drawTime) / 2);
-    }
-    drawCount++;
-    if (drawCount == 500) {
-      drawCount = 0;
-      Log.i("TrimTimeTag", "Trim path took average " + averageDrawTime + " nanosecs");
-    }
-*/
+
     calculateTransformedPath();
   }
 

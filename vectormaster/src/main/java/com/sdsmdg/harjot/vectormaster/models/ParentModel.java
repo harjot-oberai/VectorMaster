@@ -10,13 +10,24 @@ public abstract class ParentModel extends Model {
 
   private ArrayList<Model> children = new ArrayList<>(0);
 
+  /**
+   * If you want to add a model consider using addChild() instead.
+   * Gets the list of children from this parent model.
+   * Make sure to add/remove/insert models only on the main-thread because the list of children is not thread save.
+   * Also make sure to call childModel.setParent(parent) when adding children to this list.
+   */
   public ArrayList<Model> getChildren() {
     return children;
   }
 
+  /**
+   * Adds a child model to this parent model. Also automatically sets the parent on the child model.
+   * Make sure to add new models on the main-thread because the list of children is not thread save.
+   * @param model
+   */
   public void addChild(Model model) {
-    getChildren().add(model);
     model.setParent(this);
+    getChildren().add(model);
   }
 
   @Override

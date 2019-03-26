@@ -1,11 +1,8 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Path;
 
-import android.util.Log;
 import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
 public class VectorModel extends ParentModel {
@@ -21,12 +18,7 @@ public class VectorModel extends ParentModel {
 
   private float viewportWidth, viewportHeight;
 
-  private Path fullpath;
-  private long averageDrawTime = 0L;
-  private int drawCount = 0;
-
   public VectorModel() {
-    fullpath = new Path();
   }
 
   /**
@@ -37,24 +29,6 @@ public class VectorModel extends ParentModel {
     Path fullPath = new Path();
     collectFullPath(fullPath);
     return fullPath;
-  }
-
-  @Override
-  public void draw(Canvas canvas) {
-    long startTime = System.nanoTime();
-    super.draw(canvas);
-    long endTime = System.nanoTime();
-    long drawTime = endTime - startTime;
-    if (averageDrawTime == 0) {
-      averageDrawTime = drawTime;
-    } else {
-      averageDrawTime = ((averageDrawTime + drawTime) / 2);
-    }
-    drawCount++;
-    if (drawCount == 50) {
-      drawCount = 0;
-      Log.i("DrawTimeTag", "Draw took average " + averageDrawTime + " nanosecs");
-    }
   }
 
   public float getWidth() {

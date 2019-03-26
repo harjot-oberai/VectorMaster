@@ -1,7 +1,6 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
 import android.graphics.Matrix;
-
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 
 public class GroupModel extends ParentModel {
