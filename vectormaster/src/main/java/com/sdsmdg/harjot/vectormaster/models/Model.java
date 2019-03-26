@@ -44,4 +44,20 @@ public abstract class Model {
     //by default nothing to collect
   }
 
+  protected Matrix initializeMatrix(Matrix matrix, Matrix initialValue) {
+    if (matrix == null) {
+      matrix = new Matrix(); //try to create new matrix objects as less as possible
+      if (initialValue != null) {
+        matrix.set(initialValue);
+      }
+    } else {
+      if (initialValue != null) {
+        matrix.set(initialValue);
+      } else {
+        matrix.reset();
+      }
+    }
+    return matrix;
+  }
+
 }

@@ -132,7 +132,7 @@ public class PathModel extends Model {
       return;
     }
 
-    transformedPath.rewind();
+    //transformedPath.rewind();
     trimmedPath.transform(lastParentTransformation, transformedPath);
   }
 

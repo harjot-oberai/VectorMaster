@@ -10,7 +10,9 @@ public class GroupModel extends ParentModel {
   private float scaleX, scaleY;
   private float translateX, translateY;
   private Matrix ownTransformation;
+  private Matrix ownTransformationWorkMatrix; //reuses this one matrix object if lastTransformation is created by concatination
   private boolean ownTransformationChanged = true;
+  private boolean hasOwnTransformation = false;
   private Matrix lastTransformation;
   private Matrix lastTransformationWorkMatrix; //reuses this one matrix object if lastTransformation is created by concatination
 
@@ -27,16 +29,16 @@ public class GroupModel extends ParentModel {
   @Override
   public void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio) {
     if (ownTransformationChanged || transformationChanged) {
-      if (ownTransformation == null) {
-        lastTransformation = parentTransformation; //no own transformation necessary, so passthrough
-      } else {
-        if (lastTransformationWorkMatrix == null) {
-          lastTransformationWorkMatrix = new Matrix(); //we create the work matrix only if this group needs one. After that it will be reused.
-        }
+      ownTransformationChanged = false;
+
+      if (hasOwnTransformation) {
+        lastTransformationWorkMatrix = initializeMatrix(lastTransformationWorkMatrix, null);
         lastTransformationWorkMatrix.setConcat(parentTransformation, ownTransformation); //own transformation necessary, so concat with parent transformation
         lastTransformation = lastTransformationWorkMatrix;
+      } else {
+        lastTransformation = parentTransformation; //no own transformation necessary, so passthrough
       }
-      ownTransformationChanged = false;
+
       super.calculate(lastTransformation, true, strokeRatio);
     } else {
       super.calculate(lastTransformation, false, strokeRatio);
@@ -46,16 +48,14 @@ public class GroupModel extends ParentModel {
   protected void createOwnTransformation() {
     //check if we need an own transformation matrix. if there is nothing to transform, do not build a matrix
     if (scaleX != 1.0 || scaleY != 1.0 || rotation != 0 || translateX != 0 || translateY != 0) {
-      if (ownTransformation == null) {
-        ownTransformation = new Matrix(); //try to create new matrix objects as less as possible
-      } else {
-        ownTransformation.reset();
-      }
-      ownTransformation.postScale(scaleX, scaleY, pivotX, pivotY);
-      ownTransformation.postRotate(rotation, pivotX, pivotY);
-      ownTransformation.postTranslate(translateX, translateY);
+      ownTransformationWorkMatrix = initializeMatrix(ownTransformationWorkMatrix, null);
+      ownTransformationWorkMatrix.postScale(scaleX, scaleY, pivotX, pivotY);
+      ownTransformationWorkMatrix.postRotate(rotation, pivotX, pivotY);
+      ownTransformationWorkMatrix.postTranslate(translateX, translateY);
+      ownTransformation = initializeMatrix(ownTransformation, ownTransformationWorkMatrix);
+      hasOwnTransformation = true;
     } else {
-      ownTransformation = null;
+      hasOwnTransformation = false;
     }
 
     ownTransformationChanged = true;
