@@ -9,6 +9,7 @@ import android.graphics.PathMeasure;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
+import com.sdsmdg.harjot.vectormaster.utilities.parser.PathParser;
 
 public class PathModel extends Model {
 
@@ -217,8 +218,17 @@ public class PathModel extends Model {
   }
 
   public void setPathData(String pathData) {
+    setPathData(pathData, true);
+  }
+
+  public void setPathData(String pathData, boolean useLegacyParser) {
     this.pathData = pathData;
-    Path path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    Path path = null;
+    if (useLegacyParser) {
+      path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    } else {
+      path = PathParser.doPath(pathData);
+    }
     setPath(path);
   }
 

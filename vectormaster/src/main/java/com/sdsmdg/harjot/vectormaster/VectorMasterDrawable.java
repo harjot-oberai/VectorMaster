@@ -77,7 +77,7 @@ public class VectorMasterDrawable extends Drawable {
             vectorModel = null;
             return;
         }
-        vectorModel = new ModelParser().buildVectorModel(resources, resID);
+        vectorModel = new ModelParser().buildVectorModel(resources, resID, useLegacyParser);
     }
 
     private int getAttrPosition(XmlPullParser xpp, String attrName) {

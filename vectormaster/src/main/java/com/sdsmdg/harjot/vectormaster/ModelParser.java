@@ -24,7 +24,7 @@ public class ModelParser {
     return -1;
   }
 
-  public VectorModel buildVectorModel(Resources resources, int resID) {
+  public VectorModel buildVectorModel(Resources resources, int resID, boolean useLegacyParser) {
 
     if (resID == -1) {
       return null;
@@ -96,7 +96,7 @@ public class ModelParser {
                 DefaultValues.PATH_FILL_TYPE);
 
             tempPosition = getAttrPosition(xpp, "pathData");
-            pathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+            pathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null, useLegacyParser);
 
             tempPosition = getAttrPosition(xpp, "strokeAlpha");
             pathModel.setStrokeAlpha((tempPosition != -1) ?
@@ -192,7 +192,7 @@ public class ModelParser {
             clipPathModel.setName((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
 
             tempPosition = getAttrPosition(xpp, "pathData");
-            clipPathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null);
+            clipPathModel.setPathData((tempPosition != -1) ? xpp.getAttributeValue(tempPosition) : null, useLegacyParser);
           }
           break;
 

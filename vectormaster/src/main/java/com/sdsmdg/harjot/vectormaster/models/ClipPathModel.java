@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import com.sdsmdg.harjot.vectormaster.utilities.parser.PathParser;
 
 public class ClipPathModel extends Model {
   private String pathData;
@@ -62,8 +63,17 @@ public class ClipPathModel extends Model {
   }
 
   public void setPathData(String pathData) {
+    setPathData(pathData, true);
+  }
+
+  public void setPathData(String pathData, boolean useLegacyParser) {
     this.pathData = pathData;
-    Path path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    Path path = null;
+    if (useLegacyParser) {
+      path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    } else {
+      path = PathParser.doPath(pathData);
+    }
     setPath(path);
   }
 

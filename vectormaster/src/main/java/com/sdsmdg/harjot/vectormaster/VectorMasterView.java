@@ -77,7 +77,7 @@ public class VectorMasterView extends View {
             return;
         }
 
-        vectorModel = new ModelParser().buildVectorModel(resources, resID);
+        vectorModel = new ModelParser().buildVectorModel(resources, resID, useLegacyParser);
 
     }
 
