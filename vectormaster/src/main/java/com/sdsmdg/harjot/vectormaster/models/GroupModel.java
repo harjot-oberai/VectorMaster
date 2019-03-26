@@ -1,6 +1,5 @@
 package com.sdsmdg.harjot.vectormaster.models;
 
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
@@ -13,8 +12,8 @@ public class GroupModel extends ParentModel {
   private float translateX, translateY;
   private Matrix ownTransformation;
   private boolean ownTransformationChanged = true;
-  private Matrix lastParentTransformation;
   private Matrix lastTransformation;
+  private Matrix lastTransformationWorkMatrix; //reuses this one matrix object if lastTransformation is created by concatination
 
   public GroupModel() {
     rotation = DefaultValues.GROUP_ROTATION;
@@ -27,26 +26,39 @@ public class GroupModel extends ParentModel {
   }
 
   @Override
-  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-
-    //try to keep transformed matrix the same instance as long as the values do not change
-    if (ownTransformationChanged || lastParentTransformation != parentTransformation) {
-      lastParentTransformation = parentTransformation;
-      lastTransformation = new Matrix(parentTransformation);
-      lastTransformation.preConcat(ownTransformation);
+  public void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio) {
+    if (ownTransformationChanged || transformationChanged) {
+      if (ownTransformation == null) {
+        lastTransformation = parentTransformation; //no own transformation necessary, so passthrough
+      } else {
+        if (lastTransformationWorkMatrix == null) {
+          lastTransformationWorkMatrix = new Matrix(); //we create the work matrix only if this group needs one. After that it will be reused.
+        }
+        lastTransformationWorkMatrix.setConcat(parentTransformation, ownTransformation); //own transformation necessary, so concat with parent transformation
+        lastTransformation = lastTransformationWorkMatrix;
+      }
       ownTransformationChanged = false;
+      super.calculate(lastTransformation, true, strokeRatio);
+    } else {
+      super.calculate(lastTransformation, false, strokeRatio);
     }
-
-    super.draw(canvas, lastTransformation, strokeRatio);
   }
 
   protected void createOwnTransformation() {
-    Matrix transformation = new Matrix();
-    transformation.postScale(scaleX, scaleY, pivotX, pivotY);
-    transformation.postRotate(rotation, pivotX, pivotY);
-    transformation.postTranslate(translateX, translateY);
+    //check if we need an own transformation matrix. if there is nothing to transform, do not build a matrix
+    if (scaleX != 1.0 || scaleY != 1.0 || rotation != 0 || translateX != 0 || translateY != 0) {
+      if (ownTransformation == null) {
+        ownTransformation = new Matrix(); //try to create new matrix objects as less as possible
+      } else {
+        ownTransformation.reset();
+      }
+      ownTransformation.postScale(scaleX, scaleY, pivotX, pivotY);
+      ownTransformation.postRotate(rotation, pivotX, pivotY);
+      ownTransformation.postTranslate(translateX, translateY);
+    } else {
+      ownTransformation = null;
+    }
 
-    ownTransformation = transformation;
     ownTransformationChanged = true;
   }
 

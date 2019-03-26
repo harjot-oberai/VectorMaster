@@ -10,113 +10,114 @@ import com.sdsmdg.harjot.vectormaster.enums.TintMode;
 
 public class VectorModel extends ParentModel {
 
-    private float width, height;
+  private float width, height;
 
-    private float alpha = 1.0f;
+  private float alpha = 1.0f;
 
-    private boolean autoMirrored = false;
+  private boolean autoMirrored = false;
 
-    private int tint = Color.TRANSPARENT;
-    private TintMode tintMode = TintMode.SCR_IN;
+  private int tint = Color.TRANSPARENT;
+  private TintMode tintMode = TintMode.SCR_IN;
 
-    private float viewportWidth, viewportHeight;
+  private float viewportWidth, viewportHeight;
 
-    private Path fullpath;
-    private long averageDrawTime = 0L;
-    private int drawCount = 0;
+  private Path fullpath;
+  private long averageDrawTime = 0L;
+  private int drawCount = 0;
 
-    public VectorModel() {
-        fullpath = new Path();
+  public VectorModel() {
+    fullpath = new Path();
+  }
+
+  /**
+   * returns the UNTRANSFORMED paths
+   * @return
+   */
+  public Path getFullpath() {
+    Path fullPath = new Path();
+    collectFullPath(fullPath);
+    return fullPath;
+  }
+
+  @Override
+  public void draw(Canvas canvas) {
+    long startTime = System.nanoTime();
+    super.draw(canvas);
+    long endTime = System.nanoTime();
+    long drawTime = endTime - startTime;
+    if (averageDrawTime == 0) {
+      averageDrawTime = drawTime;
+    } else {
+      averageDrawTime = ((averageDrawTime + drawTime) / 2);
     }
-
-    public Path getFullpath() {
-        //TODO: traverse the model to collect the currently translated pathes
-        throw new UnsupportedOperationException("Not implemented yet.");
+    drawCount++;
+    if (drawCount == 50) {
+      drawCount = 0;
+      Log.i("DrawTimeTag", "Draw took average " + averageDrawTime + " nanosecs");
     }
+  }
 
-    @Override
-    public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-        long startTime = System.nanoTime();
-        super.draw(canvas, parentTransformation, strokeRatio);
-        long endTime = System.nanoTime();
-        long drawTime = endTime - startTime;
-        if (averageDrawTime == 0) {
-            averageDrawTime = drawTime;
-        } else {
-            averageDrawTime = ((averageDrawTime + drawTime) / 2);
-        }
-        drawCount++;
-        if (drawCount == 50) {
-            drawCount = 0;
-            Log.i("DrawTimeTag", "Draw took average " + averageDrawTime + " nanosecs");
-        }
-    }
+  public float getWidth() {
+    return width;
+  }
 
-    public void setFullpath(Path fullpath) {
-        this.fullpath = fullpath;
-    }
+  public void setWidth(float width) {
+    this.width = width;
+  }
 
-    public float getWidth() {
-        return width;
-    }
+  public float getHeight() {
+    return height;
+  }
 
-    public void setWidth(float width) {
-        this.width = width;
-    }
+  public void setHeight(float height) {
+    this.height = height;
+  }
 
-    public float getHeight() {
-        return height;
-    }
+  public float getAlpha() {
+    return alpha;
+  }
 
-    public void setHeight(float height) {
-        this.height = height;
-    }
+  public void setAlpha(float alpha) {
+    this.alpha = alpha;
+  }
 
-    public float getAlpha() {
-        return alpha;
-    }
+  public boolean isAutoMirrored() {
+    return autoMirrored;
+  }
 
-    public void setAlpha(float alpha) {
-        this.alpha = alpha;
-    }
+  public void setAutoMirrored(boolean autoMirrored) {
+    this.autoMirrored = autoMirrored;
+  }
 
-    public boolean isAutoMirrored() {
-        return autoMirrored;
-    }
+  public int getTint() {
+    return tint;
+  }
 
-    public void setAutoMirrored(boolean autoMirrored) {
-        this.autoMirrored = autoMirrored;
-    }
+  public void setTint(int tint) {
+    this.tint = tint;
+  }
 
-    public int getTint() {
-        return tint;
-    }
+  public TintMode getTintMode() {
+    return tintMode;
+  }
 
-    public void setTint(int tint) {
-        this.tint = tint;
-    }
+  public void setTintMode(TintMode tintMode) {
+    this.tintMode = tintMode;
+  }
 
-    public TintMode getTintMode() {
-        return tintMode;
-    }
+  public float getViewportWidth() {
+    return viewportWidth;
+  }
 
-    public void setTintMode(TintMode tintMode) {
-        this.tintMode = tintMode;
-    }
+  public void setViewportWidth(float viewportWidth) {
+    this.viewportWidth = viewportWidth;
+  }
 
-    public float getViewportWidth() {
-        return viewportWidth;
-    }
+  public float getViewportHeight() {
+    return viewportHeight;
+  }
 
-    public void setViewportWidth(float viewportWidth) {
-        this.viewportWidth = viewportWidth;
-    }
-
-    public float getViewportHeight() {
-        return viewportHeight;
-    }
-
-    public void setViewportHeight(float viewportHeight) {
-        this.viewportHeight = viewportHeight;
-    }
+  public void setViewportHeight(float viewportHeight) {
+    this.viewportHeight = viewportHeight;
+  }
 }

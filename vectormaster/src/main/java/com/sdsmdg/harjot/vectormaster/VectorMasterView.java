@@ -25,7 +25,10 @@ public class VectorMasterView extends View {
 
     String TAG = "VECTOR_MASTER";
 
-    private Matrix scaleMatrix;
+    private Matrix scaleMatrix = new Matrix();
+    private boolean scaleMatrixChanged;
+    private Matrix newScaleMatrix = new Matrix(); //create a matrix object which is reused on every scaleMatrix creation
+
 
     int width = 0, height = 0;
 
@@ -109,19 +112,19 @@ public class VectorMasterView extends View {
         }
 
         strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
-        Matrix translation = new Matrix(scaleMatrix);
 
         setAlpha(vectorModel.getAlpha());
 
-        vectorModel.draw(canvas, translation, scaleRatio);
+        vectorModel.calculate(scaleMatrix, scaleMatrixChanged, strokeRatio);
+        scaleMatrixChanged = false;
+        vectorModel.draw(canvas);
 
     }
 
     void buildScaleMatrix() {
 
-        scaleMatrix = new Matrix();
-
-        scaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
+        newScaleMatrix.reset();
+        newScaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
 
         float widthRatio = width / vectorModel.getViewportWidth();
         float heightRatio = height / vectorModel.getViewportHeight();
@@ -129,7 +132,10 @@ public class VectorMasterView extends View {
 
         scaleRatio = ratio;
 
-        scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
+        newScaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
+
+        scaleMatrix.set(newScaleMatrix);
+        scaleMatrixChanged = true;
     }
 
     public Path getFullPath() {
@@ -164,6 +170,6 @@ public class VectorMasterView extends View {
     }
 
     public Matrix getScaleMatrix() {
-        return scaleMatrix;
+        return new Matrix(scaleMatrix);
     }
 }

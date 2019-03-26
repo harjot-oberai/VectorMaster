@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 
+import android.util.Log;
 import com.sdsmdg.harjot.vectormaster.DefaultValues;
 import com.sdsmdg.harjot.vectormaster.utilities.Utils;
 
@@ -27,18 +28,24 @@ public class PathModel extends Model {
   private Paint.Join strokeLineJoin;
   private float strokeMiterLimit;
   private float strokeWidth;
-
   private float strokeRatio;
+  private boolean strokeChanged;
+
+  private long averageDrawTime = 0L;
+  private int drawCount = 0;
 
   private boolean isFillAndStroke = false;
 
   // Support for trim-paths is not available
 
   private Path path;
+  private PathMeasure pathMeasure;
   private Path trimmedPath;
-  private Path transformedPath;
-  private Matrix lastTransformation;
+  private Path transformedPath = new Path();
   private Paint pathPaint;
+
+  private Matrix lastParentTransformation;
+  private float lastStrokeRatio;
 
   public PathModel() {
     fillAlpha = DefaultValues.PATH_FILL_ALPHA;
@@ -61,27 +68,33 @@ public class PathModel extends Model {
   }
 
   @Override
-  public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
+  public void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio) {
+    if (transformationChanged || lastParentTransformation == null) {
+      lastParentTransformation = parentTransformation;
+      calculateTransformedPath();
+    }
+    if (strokeChanged || lastStrokeRatio != strokeRatio) {
+      strokeChanged = false;
+      lastStrokeRatio = strokeRatio;
+      pathPaint.setStrokeWidth(strokeWidth * this.strokeRatio * strokeRatio);
+    }
+  }
+
+  @Override
+  public void prepare(Canvas canvas) {
     //path do not prepare
   }
 
   @Override
-  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-    //try caching as much as possible to do path calculation only if necessary
-    if (transformedPath == null || lastTransformation == null || !lastTransformation.equals(parentTransformation)) {
-      transformedPath = transform(trimmedPath, parentTransformation);
-      lastTransformation = parentTransformation;
-    }
+  public void draw(Canvas canvas) {
     transformedPath.setFillType(fillType);
-    Path pathToDraw = transformedPath;
-    pathPaint.setStrokeWidth(strokeWidth * this.strokeRatio * strokeRatio);
     if (isFillAndStroke()) {
       makeFillPaint();
-      canvas.drawPath(pathToDraw, getPathPaint());
+      canvas.drawPath(transformedPath, getPathPaint());
       makeStrokePaint();
-      canvas.drawPath(pathToDraw, getPathPaint());
+      canvas.drawPath(transformedPath, getPathPaint());
     } else {
-      canvas.drawPath(pathToDraw, getPathPaint());
+      canvas.drawPath(transformedPath, getPathPaint());
     }
   }
 
@@ -119,30 +132,58 @@ public class PathModel extends Model {
     pathPaint.setStyle(Paint.Style.FILL);
   }
 
-  public void trimPath() {
-      if (path == null) {
-        return;
-      }
+  private void calculateTransformedPath() {
+    if (trimmedPath == null || lastParentTransformation == null) {
+      return;
+    }
 
-      if (trimPathStart == 0 && trimPathEnd == 1 && trimPathOffset == 0) {
-        trimmedPath = new Path(path);
-        transformedPath = null;
-      } else {
-        PathMeasure pathMeasure = new PathMeasure(path, false);
-        float length = pathMeasure.getLength();
-        Path trimmed = new Path();
-        pathMeasure.getSegment(
-            (trimPathStart + trimPathOffset) * length,
-            (trimPathEnd + trimPathOffset) * length,
-            trimmed,
-            true);
-        trimmedPath = trimmed;
-        transformedPath = null;
-      }
+    transformedPath.rewind();
+    trimmedPath.transform(lastParentTransformation, transformedPath);
+  }
+
+  private void calculateTrimmedPath() {
+    if (path == null) {
+      return;
+    }
+
+    // long startTime = System.nanoTime();
+    if (trimPathStart != 0 || trimPathEnd != 1 || trimPathOffset != 0) {
+      float trimStart = trimPathStart + trimPathOffset;
+      float trimEnd = trimPathEnd + trimPathOffset;
+      float length = pathMeasure.getLength();
+      trimmedPath.rewind();
+      pathMeasure.getSegment(
+          trimStart * length,
+          trimEnd * length,
+          trimmedPath,
+          true);
+    } else {
+      trimmedPath.set(path);
+    }
+/*
+    long endTime = System.nanoTime();
+    long drawTime = endTime - startTime;
+    if (averageDrawTime == 0) {
+      averageDrawTime = drawTime;
+    } else {
+      averageDrawTime = ((averageDrawTime + drawTime) / 2);
+    }
+    drawCount++;
+    if (drawCount == 500) {
+      drawCount = 0;
+      Log.i("TrimTimeTag", "Trim path took average " + averageDrawTime + " nanosecs");
+    }
+*/
+    calculateTransformedPath();
+  }
+
+  @Override
+  public void collectFullPath(Path collectedPath) {
+    collectedPath.addPath(getPath());
   }
 
   public Path getTrimmedPath() {
-    return trimmedPath;
+    return new Path(trimmedPath);
   }
 
   public Path getPath() {
@@ -151,7 +192,9 @@ public class PathModel extends Model {
 
   public void setPath(Path path) {
     this.path = path;
-    trimPath();
+    this.pathMeasure = new PathMeasure(path, false);
+    this.trimmedPath = new Path(path);
+    calculateTrimmedPath();
   }
 
   public Paint getPathPaint() {
@@ -160,6 +203,7 @@ public class PathModel extends Model {
 
   public void setPathPaint(Paint pathPaint) {
     this.pathPaint = pathPaint;
+    strokeChanged = true;
   }
 
   public float getFillAlpha() {
@@ -194,8 +238,8 @@ public class PathModel extends Model {
 
   public void setPathData(String pathData) {
     this.pathData = pathData;
-    this.path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
-    trimPath();
+    Path path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    setPath(path);
   }
 
   public float getTrimPathStart() {
@@ -204,7 +248,7 @@ public class PathModel extends Model {
 
   public void setTrimPathStart(float trimPathStart) {
     this.trimPathStart = trimPathStart;
-    trimPath();
+    calculateTrimmedPath();
   }
 
   public float getTrimPathEnd() {
@@ -213,7 +257,7 @@ public class PathModel extends Model {
 
   public void setTrimPathEnd(float trimPathEnd) {
     this.trimPathEnd = trimPathEnd;
-    trimPath();
+    calculateTrimmedPath();
   }
 
   public float getTrimPathOffset() {
@@ -222,7 +266,7 @@ public class PathModel extends Model {
 
   public void setTrimPathOffset(float trimPathOffset) {
     this.trimPathOffset = trimPathOffset;
-    trimPath();
+    calculateTrimmedPath();
   }
 
   public float getStrokeAlpha() {
@@ -276,7 +320,7 @@ public class PathModel extends Model {
 
   public void setStrokeWidth(float strokeWidth) {
     this.strokeWidth = strokeWidth;
-    updatePaint();
+    strokeChanged = true;
   }
 
   public boolean isFillAndStroke() {
@@ -289,6 +333,7 @@ public class PathModel extends Model {
 
   public void setStrokeRatio(float strokeRatio) {
     this.strokeRatio = strokeRatio;
+    strokeChanged = true;
   }
 
 }

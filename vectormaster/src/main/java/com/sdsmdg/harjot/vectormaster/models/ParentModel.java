@@ -2,6 +2,7 @@ package com.sdsmdg.harjot.vectormaster.models;
 
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Path;
 
 import java.util.ArrayList;
 
@@ -19,18 +20,32 @@ public abstract class ParentModel extends Model {
   }
 
   @Override
-  public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
+  public void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio) {
+    for (Model child : getChildren()) {
+      child.calculate(parentTransformation, transformationChanged, strokeRatio);
+    }
+  }
+
+  @Override
+  public void prepare(Canvas canvas) {
     //parents by default do not prepare the canvas recursively
   }
 
   @Override
-  public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
+  public void draw(Canvas canvas) {
     //parents prepare just their own children before they draw
     for (Model child : getChildren()) {
-      child.prepare(canvas, parentTransformation, strokeRatio);
+      child.prepare(canvas);
     }
     for (Model child : getChildren()) {
-      child.draw(canvas, parentTransformation, strokeRatio);
+      child.draw(canvas);
+    }
+  }
+
+  @Override
+  public void collectFullPath(Path collectedPath) {
+    for (Model child : getChildren()) {
+      child.collectFullPath(collectedPath);
     }
   }
 

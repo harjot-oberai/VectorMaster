@@ -32,7 +32,9 @@ public class VectorMasterDrawable extends Drawable {
 
     String TAG = "VECTOR_MASTER";
 
-    private Matrix scaleMatrix;
+    private Matrix scaleMatrix = new Matrix();
+    private boolean scaleMatrixChanged = true;
+    private Matrix newScaleMatrix = new Matrix(); //create a matrix object which is reused on every scaleMatrix creation
 
     private int width = -1, height = -1;
 
@@ -138,19 +140,19 @@ public class VectorMasterDrawable extends Drawable {
         }
 
         strokeRatio = Math.min(width / vectorModel.getWidth(), height / vectorModel.getHeight());
-        Matrix translation = new Matrix(scaleMatrix);
-        translation.postTranslate(offsetX, offsetY);
-        translation.postScale(scaleX, scaleY);
 
         setAlpha(Utils.getAlphaFromFloat(vectorModel.getAlpha()));
+
+        vectorModel.calculate(scaleMatrix, scaleMatrixChanged, strokeRatio);
+        scaleMatrixChanged = false;
 
         if (left != 0 || top != 0) {
             tempSaveCount = canvas.save();
             canvas.translate(left, top);
-            vectorModel.draw(canvas, translation, strokeRatio);
+            vectorModel.draw(canvas);
             canvas.restoreToCount(tempSaveCount);
         } else {
-            vectorModel.draw(canvas, translation, strokeRatio);
+            vectorModel.draw(canvas);
         }
 
     }
@@ -181,9 +183,9 @@ public class VectorMasterDrawable extends Drawable {
     }
 
     private void buildScaleMatrix() {
-        scaleMatrix = new Matrix();
 
-        scaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
+        newScaleMatrix.reset();
+        newScaleMatrix.postTranslate(width / 2 - vectorModel.getViewportWidth() / 2, height / 2 - vectorModel.getViewportHeight() / 2);
 
         float widthRatio = width / vectorModel.getViewportWidth();
         float heightRatio = height / vectorModel.getViewportHeight();
@@ -191,7 +193,13 @@ public class VectorMasterDrawable extends Drawable {
 
         scaleRatio = ratio;
 
-        scaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
+        newScaleMatrix.postScale(ratio, ratio, width / 2, height / 2);
+
+        newScaleMatrix.postTranslate(offsetX, offsetY);
+        newScaleMatrix.postScale(scaleX, scaleY);
+
+        scaleMatrix.set(newScaleMatrix);
+        scaleMatrixChanged = true;
     }
 
     public Path getFullPath() {
@@ -226,7 +234,7 @@ public class VectorMasterDrawable extends Drawable {
     }
 
     public Matrix getScaleMatrix() {
-        return scaleMatrix;
+        return new Matrix(scaleMatrix); //make a copy so that from outside the real scaleMatrix cannot be manipulated because this would not be propagated to the VectorModel correctly because scaleMatrixChanged would not be set.
     }
 
     public float getOffsetX() {
@@ -235,6 +243,7 @@ public class VectorMasterDrawable extends Drawable {
 
     public void setOffsetX(float offsetX) {
         this.offsetX = offsetX;
+        buildScaleMatrix();
         invalidateSelf();
     }
 
@@ -244,6 +253,7 @@ public class VectorMasterDrawable extends Drawable {
 
     public void setOffsetY(float offsetY) {
         this.offsetY = offsetY;
+        buildScaleMatrix();
         invalidateSelf();
     }
 
@@ -253,6 +263,7 @@ public class VectorMasterDrawable extends Drawable {
 
     public void setScaleX(float scaleX) {
         this.scaleX = scaleX;
+        buildScaleMatrix();
         invalidateSelf();
     }
 
@@ -262,6 +273,7 @@ public class VectorMasterDrawable extends Drawable {
 
     public void setScaleY(float scaleY) {
         this.scaleY = scaleY;
+        buildScaleMatrix();
         invalidateSelf();
     }
 }

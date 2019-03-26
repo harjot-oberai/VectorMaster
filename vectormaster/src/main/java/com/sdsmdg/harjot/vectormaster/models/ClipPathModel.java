@@ -8,70 +8,72 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 
 public class ClipPathModel extends Model {
-    private String pathData;
+  private String pathData;
 
-    private Path path;
-    private Path transformedPath;
-    private Matrix lastTransformation;
+  private Path path;
+  private Path transformedPath = new Path();
+  private Matrix lastParentTransformation;
 
-    private Paint clipPaint;
+  private Paint clipPaint;
 
-    public ClipPathModel() {
-        path = new Path();
-        clipPaint = new Paint();
-        clipPaint.setAntiAlias(true);
-        clipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+  public ClipPathModel() {
+    path = new Path();
+    clipPaint = new Paint();
+    clipPaint.setAntiAlias(true);
+    clipPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+  }
+
+  @Override
+  public void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio) {
+    if (transformationChanged || lastParentTransformation == null) {
+      lastParentTransformation = parentTransformation;
+      calculateTransformedPath();
     }
+  }
 
-    @Override
-    public void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-        canvas.clipPath(preparePath(parentTransformation));
+  @Override
+  public void prepare(Canvas canvas) {
+    canvas.clipPath(transformedPath);
+  }
+
+  @Override
+  public void draw(Canvas canvas) {
+    //clip path does no drawing
+  }
+
+  private void calculateTransformedPath() {
+    if (path == null || lastParentTransformation == null) {
+      return;
     }
+    transformedPath.rewind();
+    path.transform(lastParentTransformation, transformedPath);
+  }
 
-    @Override
-    public void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio) {
-        //clip path does no drawing
-    }
+  public Paint getClipPaint() {
+    return clipPaint;
+  }
 
-    private Path preparePath(Matrix transformation) {
-        //try caching as much as possible to do path calculation only if necessary
-        if (path == null) {
-            path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
-            transformedPath = null;
-        }
-        if (transformedPath == null || lastTransformation == null || !lastTransformation.equals(transformation)) {
-            transformedPath = transform(path, transformation);
-            lastTransformation = transformation;
-        }
-        return transformedPath;
-    }
+  public void setClipPaint(Paint clipPaint) {
+    this.clipPaint = clipPaint;
+  }
 
+  public String getPathData() {
+    return pathData;
+  }
 
-    public Paint getClipPaint() {
-        return clipPaint;
-    }
+  public void setPathData(String pathData) {
+    this.pathData = pathData;
+    Path path = com.sdsmdg.harjot.vectormaster.utilities.legacyparser.PathParser.createPathFromPathData(pathData);
+    setPath(path);
+  }
 
-    public void setClipPaint(Paint clipPaint) {
-        this.clipPaint = clipPaint;
-    }
+  public Path getPath() {
+    return path;
+  }
 
-    public String getPathData() {
-        return pathData;
-    }
-
-    public void setPathData(String pathData) {
-        this.pathData = pathData;
-        path = null;
-    }
-
-    public Path getPath() {
-        return path;
-    }
-
-    public void setPath(Path path) {
-        this.path = path;
-    }
-
-
+  public void setPath(Path path) {
+    this.path = path;
+    calculateTransformedPath();
+  }
 
 }

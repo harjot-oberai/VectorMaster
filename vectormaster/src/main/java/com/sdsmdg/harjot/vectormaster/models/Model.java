@@ -25,13 +25,16 @@ public abstract class Model {
     this.parent = parent;
   }
 
-  public abstract void prepare(Canvas canvas, Matrix parentTransformation, float strokeRatio);
-  public abstract void draw(Canvas canvas, Matrix parentTransformation, float strokeRatio);
+  public abstract void calculate(Matrix parentTransformation, Boolean transformationChanged, float strokeRatio);
+  public abstract void prepare(Canvas canvas);
+  public abstract void draw(Canvas canvas);
 
-  protected Path transform(Path path, Matrix transformation) {
-    Path resultPath = new Path(path);
-    resultPath.transform(transformation);
-    return resultPath;
+  /**
+   * adds the UNTRANSFORMED path to collectedPath
+   * @return
+   */
+  public void collectFullPath(Path collectedPath) {
+    //by default nothing to collect
   }
 
 }
