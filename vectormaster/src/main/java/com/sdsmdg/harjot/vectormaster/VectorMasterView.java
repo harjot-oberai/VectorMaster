@@ -75,6 +75,10 @@ public class VectorMasterView extends View {
         buildVectorModel();
 
     }
+    
+    public VectorModel getModel() {
+        return vectorModel;
+    }
 
     void buildVectorModel() {
 
